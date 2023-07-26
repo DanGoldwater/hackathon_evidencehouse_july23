@@ -51,12 +51,6 @@ for dataset in data:
         get_and_save_dataset(dataset)
     except:
         with open(failed_list, 'a') as file:
-            file.write('Your line to append\n')
+            file.write(dataset)
 
         
-# for dataset in data:
-#     get_and_save_dataset(data)
-
- 
-# Usage:
-# get_and_save_dataset('zoo-licensing-database')
