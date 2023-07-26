@@ -9,8 +9,8 @@ from langchain import PromptTemplate, LLMChain
 # load_dotenv(find_dotenv())
 
 import os
-key = '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'
-os.environ["OPENAI_API_KEY"] = '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'
+key = ''
+os.environ["OPENAI_API_KEY"] = ''
 
 # g4 = OpenAI(model='gpt-4')
 
