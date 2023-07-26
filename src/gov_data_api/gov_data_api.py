@@ -1,3 +1,4 @@
+#%%
 import requests
 import json
 import os
@@ -12,7 +13,7 @@ def get_datasets():
     if response.status_code != 200:
         raise Exception("API request failed with status {}: {}".format(response.status_code, data))
     
-    return data
+    return data['result']
 
 #  Global path variable
 DATASET_DIRECTORY = 'src/data/gov_data/'
@@ -39,12 +40,23 @@ def get_and_save_dataset(dataset_id):
         
     print("Dataset '{}' has been saved locally at '{}'.".format(dataset_id, dataset_path))
 
+data=get_datasets()
+print(data[7])
+
+
+failed_list = os.path.join(DATASET_DIRECTORY, 'failed_datasets.txt')
+
+for dataset in data:
+    try:
+        get_and_save_dataset(dataset)
+    except:
+        with open(failed_list, 'a') as file:
+            file.write('Your line to append\n')
+
+        
+# for dataset in data:
+#     get_and_save_dataset(data)
+
+ 
 # Usage:
-# get_and_save_dataset('cabinet-office-energy-use')
-
-# Usage:
-get_and_save_dataset('zoo-licensing-database')
-
-
-# datasets = get_datasets()
-# print(json.dumps(datasets, indent=2))
+# get_and_save_dataset('zoo-licensing-database')
