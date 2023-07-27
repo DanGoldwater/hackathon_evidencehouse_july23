@@ -9,7 +9,7 @@ from dotenv import load_dotenv
 
 FAISS_PATH = "faiss_index.pkl"
 FAISS_PATH2 = "faiss_index2.pkl"
-FAISS_SMALL_PATH = 'src/data/smaller'
+FAISS_OPAI_PATH = 'src/data/from_opai'
 
 load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
@@ -41,7 +41,8 @@ from sentence_transformers import SentenceTransformer
 
 def get_main_df():
     return pandas.read_csv(
-        "src/data/smaller.csv"
+        # "src/data/smaller.csv"
+        "src/data/Contract_Data.csv"
     )
 EmbeddingsOpenAi =  OpenAIEmbeddings(model='text-embedding-ada-002')
 
@@ -120,9 +121,9 @@ def main():
     df = get_main_df()
     print(len(df))
     # make_local_faiss_db(df=df.sample(n=30))
-    # get_embeddings_and_index(df=df, path=FAISS_SMALL_PATH)
+    # get_embeddings_and_index(df=df, path=FAISS_OPAI_PATH)
     ddf = query_vector_store(df=df, 
-                             path=FAISS_SMALL_PATH,
+                             path=FAISS_OPAI_PATH,
                              query_text='We are building a tiny battleship. It has to run on woodsmoke')
     for d in ddf['Description']:
         print(d)
