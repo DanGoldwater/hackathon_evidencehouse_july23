@@ -50,11 +50,7 @@ def chat_ui(
             sub_df = embellish.embellish_dataframe(df=sub_df)
             
             text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
-
-            df = vector_store.get_nearest_rows_from_df(query=message, top_k=10)
-            print(df.columns)
-            print(df.head)
-            costs_barchart_ui(df)
+            costs_barchart_ui(sub_df)
             chat_messages.append(
                 {"role": "user", "content": load_intial_prompt(
                     input_description= message, 
