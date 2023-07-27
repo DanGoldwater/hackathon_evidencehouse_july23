@@ -8,6 +8,6 @@ df = embellish.embellish_dataframe(df.sample(n=3))
 
 for i, row in df.iterrows():
     # print(df['title'])
-    print(df['Description'])
-    print(df['unforseen_costs'])
+    print(row['Description'])
+    print(row['unforseen_costs'])
     print('-' * 50)
