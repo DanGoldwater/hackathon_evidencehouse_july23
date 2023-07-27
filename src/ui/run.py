@@ -3,10 +3,11 @@ import random
 import pandas as pd
 import time
 
-from .components.summary_tab import summary_tab_ui
-from .models import RiskFactor
 from .components.chat import chat_ui
+from .models import RiskFactor, CostDriver
 from .components.graphs_tab import graphs_tab_ui
+from .components.summary_tab import summary_tab_ui
+from .components.cost_drivers import cost_drivers_tab_ui
 from .components.risk_factors_tab import risk_factors_tab_ui
 
 with gr.Blocks(
@@ -31,13 +32,47 @@ with gr.Blocks(
                             title="Foreign Goods Tax Increase",
                             description="If the onboard computer chips are sourced from Taiwanese factories with Chinese suppliers, any increase in foreign goods tax may lead to an increase in chip costs. Given the geopolitical tension and trade wars, the probability of such an occurrence is moderate.",
                             risk_probability="moderate",
-                            cost_increase_millions=10,
-                        )
+                            cost_gbp=10_000_000,
+                        ),
+                        RiskFactor(
+                            title="Rare Earth Elements",
+                            description="Rare earth elements are required for the construction of the submarines. The cost of rare earth elements is expected to increase by 5% annually.",
+                            risk_probability="low",
+                            cost_gbp=1_000_000,
+                        ),
+                        RiskFactor(
+                            title="Disruption of Supply Chain",
+                            description="The supply chain for the construction of the submarines is complex and involves multiple suppliers. Any disruption in the supply chain may lead to delays in the project. The probability of such an occurrence is low.",
+                            risk_probability="low",
+                            cost_gbp=10_000_000,
+                        ),
                     ]
                 )
-            with gr.Tab("Summary"):
-                summary_tab_ui(
-                    """
+
+            with gr.Tab("Cost Drivers"):
+                cost_drivers_tab_ui(
+                    [
+                        CostDriver(
+                            title="Skilled Labour",
+                            description="Skilled labour is required for the construction of the submarines. The cost of labour is expected to increase by 5% annually.",
+                            cost_gbp=1_000_000,
+                        ),
+                        CostDriver(
+                            title="Rare Earth Elements",
+                            description="Rare earth elements are required for the construction of the submarines. The cost of rare earth elements is expected to increase by 5% annually.",
+                            cost_gbp=1_000_000,
+                        ),
+                        CostDriver(
+                            title="Administrative Costs",
+                            description="Administrative costs are expected to increase by 5% annually.",
+                            cost_gbp=10_000_000,
+                        ),
+                    ]
+                )
+
+with gr.Tab("Summary"):
+    summary_tab_ui(
+        """
 # Project Summary: Procurement of 10x Submarines
 ## I. Project Overview 
 The project aims to procure 10 state-of-the-art submarines to enhance our naval capabilities. 
@@ -61,8 +96,7 @@ testing, delivery, and commissioning.
 ## VI. Risk Analysis
 Several risk factors have been identified and will be closely monitored throughout the project. These include: 
 """
-                )
-
+    )
 
 demo.queue()
 demo.launch()
@@ -70,4 +104,3 @@ demo.launch()
 
 # What are the different cost drivers of the procurement
 # What are the costs of potential risks
-#

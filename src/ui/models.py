@@ -5,4 +5,10 @@ class RiskFactor(BaseModel):
     title: str
     description: str
     risk_probability: str
-    cost_increase_millions: float
+    cost_gbp: float
+
+
+class CostDriver(BaseModel):
+    title: str
+    description: str
+    cost_gbp: float

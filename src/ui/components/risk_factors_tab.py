@@ -12,12 +12,13 @@ def risk_factors_tab_ui(risk_factors: list[RiskFactor]):
                 <b>
                     {factor.title}
                     <span style='color:red; margin-left:10px'> Risk: {factor.risk_probability}</span>
-                    <span style='color:green; margin-left:10px'> Cost: ${factor.cost_increase_millions}M</span>
+                    <span style='color:green; margin-left:10px'> Cost: ${factor.cost_gbp/1_000_000}M</span>
                 </b>
                 <br/>
             </div>
             <div style='font-size:18px'>
                 {factor.description}
             </div>
+            <hr/>
             """
             )
