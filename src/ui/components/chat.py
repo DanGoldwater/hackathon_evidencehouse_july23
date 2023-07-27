@@ -10,6 +10,9 @@ from src.ui.backend.llm_inference import (
 )
 from src.ui.components.risk_factors_tab import get_risk_factor_html
 from src.ui.components.cost_drivers_tab import get_cost_driver_html
+from src.vector_store import vector_store
+
+TOP_K_SIMILAR_CONTRACTS = 5
 
 
 def chat_ui(
@@ -29,7 +32,8 @@ def chat_ui(
 
         # If its the first message use the initial prompt (and vector db query)
         if len(chat_messages) == 1:
-            # Vector db query
+            
+            # vector_store.get_nearest_rows_from_df()
 
             chat_messages.append(
                 {"role": "user", "content": load_intial_prompt(message)}

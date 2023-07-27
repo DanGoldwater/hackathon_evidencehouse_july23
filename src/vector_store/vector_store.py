@@ -23,7 +23,7 @@ model = DistilBertModel.from_pretrained("distilbert-base-uncased")
 
 def get_main_df():
     return pandas.read_csv(
-        "src/data/nhs_contract_data/NHS_early_future_opportunity_awarded_closed.csv"
+        "src/data/Contract_Data.csv"
     )
 
 
@@ -78,8 +78,11 @@ def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), t
 
 def main():
     df = get_main_df()
-    sub_df = get_nearest_rows_from_df(query="Biggest NHS procure", df=df, top_k=2)
-    print(sub_df.head())
+    make_local_faiss_db(df=df.sample(n=30))
+    
+    
+    # sub_df = get_nearest_rows_from_df(query="Biggest NHS procure", df=df, top_k=2)
+    # print(sub_df.head())
 
 
 if __name__ == "__main__":
