@@ -3,11 +3,9 @@ import pandas
 from time import sleep
 import langchain
 from sentence_transformers import SentenceTransformer
-from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from transformers import DistilBertTokenizer, DistilBertModel
 import faiss
 import numpy as np
-from langchain.embeddings import HuggingFaceEmbeddings
 from dotenv import load_dotenv
 
 
@@ -22,9 +20,7 @@ model = DistilBertModel.from_pretrained("distilbert-base-uncased")
 
 
 def get_main_df():
-    return pandas.read_csv(
-        "src/data/Contract_Data.csv"
-    )
+    return pandas.read_csv("src/data/Contract_Data.csv")
 
 
 def make_local_faiss_db(df):
@@ -57,14 +53,16 @@ def get_text_from_row(row):
     text = str(title) + " " + description + " " + str(additional_text)
     return text
 
+
 def get_strucutred_text_from_small_df(df):
-    string_out = ''
+    string_out = ""
     for i, row in df.iterrows():
-        title = 'Title: ' + row['Title']
-        description = 'Description: ' + row['Description']
-        additional_text = 'Additional Text: ' + row['Additional Text']
-    string_out = string_out + title + description + additional_text + '\n\n'
+        title = "Title: " + row["Title"]
+        description = "Description: " + row["Description"]
+        additional_text = "Additional Text: " + str(row["Additional Text"])
+    string_out = string_out + title + description + additional_text + "\n\n"
     return string_out
+
 
 def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), top_k=5):
     model = SentenceTransformer("all-mpnet-base-v2")
@@ -87,8 +85,7 @@ def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), t
 def main():
     df = get_main_df()
     make_local_faiss_db(df=df.sample(n=30))
-    
-    
+
     # sub_df = get_nearest_rows_from_df(query="Biggest NHS procure", df=df, top_k=2)
     # print(sub_df.head())
 
