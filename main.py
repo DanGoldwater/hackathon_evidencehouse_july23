@@ -9,8 +9,9 @@ from langchain import PromptTemplate, LLMChain
 # load_dotenv(find_dotenv())
 
 import os
-key = ''
-os.environ["OPENAI_API_KEY"] = ''
+
+key = ""
+os.environ["OPENAI_API_KEY"] = ""
 
 # g4 = OpenAI(model='gpt-4')
 
@@ -25,12 +26,14 @@ prompt = PromptTemplate(template=template, input_variables=["question"])
 
 llm_chain = LLMChain(prompt=prompt, llm=llm)
 
-completion = openai.ChatCompletion.create( # Change the function Completion to ChatCompletion
-  model = 'gpt-3.5-turbo',
-  messages = [ # Change the prompt parameter to the messages parameter
-    {'role': 'user', 'content': 'What is a horse?'}
-  ],
-  temperature = 0  
+completion = (
+    openai.ChatCompletion.create(  # Change the function Completion to ChatCompletion
+        model="gpt-3.5-turbo",
+        messages=[  # Change the prompt parameter to the messages parameter
+            {"role": "user", "content": "What is a horse?"}
+        ],
+        temperature=0,
+    )
 )
 
-print(completion['choices'][0]['message']['content'])
+print(completion["choices"][0]["message"]["content"])
