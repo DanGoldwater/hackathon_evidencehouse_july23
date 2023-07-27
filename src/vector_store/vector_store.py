@@ -6,37 +6,31 @@ from sentence_transformers import SentenceTransformer
 from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from transformers import DistilBertTokenizer, DistilBertModel
 import faiss
-import numpy as np  
-# Load the document, split it into chunks, embed each chunk and load it into the vector store.
-
-# tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
-# model = DistilBertModel.from_pretrained('distilbert-base-uncased')
-
-
+import numpy as np
 from langchain.embeddings import HuggingFaceEmbeddings
-
 from dotenv import load_dotenv
 
 
-FAISS_PATH = 'faiss_index.pkl'
+FAISS_PATH = "faiss_index.pkl"
 
 load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 
 
-tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
-model = DistilBertModel.from_pretrained('distilbert-base-uncased')
+tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
+model = DistilBertModel.from_pretrained("distilbert-base-uncased")
 
 
 def get_main_df():
     return pandas.read_csv(
-        "src/data/nhs_contract_data/NHS_early_future_opportunity_awarded_closed.csv"    )
-    
+        "src/data/nhs_contract_data/NHS_early_future_opportunity_awarded_closed.csv"
+    )
+
 
 def make_local_faiss_db(df):
-    model = SentenceTransformer('all-mpnet-base-v2')
+    model = SentenceTransformer("all-mpnet-base-v2")
 
-    # Get embeddings for each row 
+    # Get embeddings for each row
     embeds = []
     for i, row in df.iterrows():
         text = get_text_from_row(row)
@@ -45,18 +39,17 @@ def make_local_faiss_db(df):
     # embeddings = [model.encode(row['Text']) for idx, row in df.iterrows()]
 
     embeds = np.array(embeds)
-    index = faiss.IndexIDMap(faiss.IndexFlatIP(768)) 
+    index = faiss.IndexIDMap(faiss.IndexFlatIP(768))
 
     # Add embeddings to index
-    index.add_with_ids(embeds, np.arange(len(embeds))) 
+    index.add_with_ids(embeds, np.arange(len(embeds)))
 
     # Save index
     faiss.write_index(index, FAISS_PATH)
 
 
-
 def get_text_from_row(row):
-    title = row["Title"]    
+    title = row["Title"]
     description = row["Description"]
     additional_text = row["Additional Text"]
 
@@ -65,19 +58,19 @@ def get_text_from_row(row):
     return text
 
 
-def get_nearest_rows_from_df(query:str, df: pandas.DataFrame=get_main_df(), top_k=5):
-    model = SentenceTransformer('all-mpnet-base-v2')
+def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), top_k=5):
+    model = SentenceTransformer("all-mpnet-base-v2")
     index = faiss.read_index(FAISS_PATH)
-    
+
     # Encode query and reshape it to 2D
     query_emb = model.encode(query).reshape(1, -1)
-    
+
     # Search index
     distances, indices = index.search(query_emb, top_k)
-    
+
     # Flatten the indices array
     indices = indices.flatten()
-    
+
     # Get most similar rows
     sub_df = df.loc[indices]
     return sub_df
@@ -85,9 +78,8 @@ def get_nearest_rows_from_df(query:str, df: pandas.DataFrame=get_main_df(), top_
 
 def main():
     df = get_main_df()
-    sub_df = get_nearest_rows_from_df(query='Biggest NHS procure', top_k=2)
+    sub_df = get_nearest_rows_from_df(query="Biggest NHS procure", df=df, top_k=2)
     print(sub_df.head())
-    
 
 
 if __name__ == "__main__":
