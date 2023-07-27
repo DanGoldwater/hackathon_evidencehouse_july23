@@ -1,14 +1,12 @@
 import os
 import pandas
-from time import sleep
-import langchain
 from sentence_transformers import SentenceTransformer
 from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from transformers import DistilBertTokenizer, DistilBertModel
 import faiss
 import numpy as np
-from langchain.embeddings import HuggingFaceEmbeddings
 from dotenv import load_dotenv
+from tqdm import tqdm
 
 
 FAISS_PATH = "faiss_index.pkl"
@@ -32,7 +30,7 @@ def make_local_faiss_db(df):
 
     # Get embeddings for each row
     embeds = []
-    for i, row in df.iterrows():
+    for i, row in tqdm(df.iterrows(), total=df.shape[0]):
         text = get_text_from_row(row)
         embed = model.encode(text)
         embeds.append(embed)
@@ -54,7 +52,7 @@ def get_text_from_row(row):
     additional_text = row["Additional Text"]
 
     # Concatenate into single doc
-    text = str(title) + " " + description + " " + str(additional_text)
+    text = str(title) + " " + str(description) + " " + str(additional_text)
     return text
 
 def get_strucutred_text_from_small_df(df):
@@ -86,7 +84,7 @@ def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), t
 
 def main():
     df = get_main_df()
-    make_local_faiss_db(df=df.sample(n=30))
+    make_local_faiss_db(df=df.sample(frac=0.5))
     
     
     # sub_df = get_nearest_rows_from_df(query="Biggest NHS procure", df=df, top_k=2)
