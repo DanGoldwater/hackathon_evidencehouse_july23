@@ -124,7 +124,7 @@ def main():
     # get_embeddings_and_index(df=df, path=FAISS_OPAI_PATH)
     ddf = query_vector_store(df=df, 
                              path=FAISS_OPAI_PATH,
-                             query_text='We are building a tiny battleship. It has to run on woodsmoke')
+                             query_text='Our plan is to procure four hundred new street lamps for our count')
     for d in ddf['Description']:
         print(d)
     
