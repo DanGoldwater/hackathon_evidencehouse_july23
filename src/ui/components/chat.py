@@ -16,10 +16,7 @@ def update(inputs: str):
     return "hello world" + inputs
 
 
-def chat_ui(
-    risk_factors: list[gr.Blocks],
-    cost_drivers: list[gr.Blocks],
-):
+def chat_inference():
     def predict(message, history):
         chat_messages = []
 
@@ -49,23 +46,24 @@ def chat_ui(
             yield response
 
         # If its the first call then parse and render the risk factors and cost drivers
-        if len(chat_messages) == 2:
-            risk_factors_data = parse_risk_factors_data(response)
-            cost_drivers_data = parse_cost_drivers_data(response)
+        # if len(chat_messages) == 2:
+        # risk_factors_data = parse_risk_factors_data(response)
+        # cost_drivers_data = parse_cost_drivers_data(response)
 
-            # for i in range(len(risk_factors)):
-            # risk_factors[i].update(get_risk_factor_html(risk_factors_data[i]))
-            # cost_drivers[i].update(get_cost_driver_html(cost_drivers_data[i]))
+        # for i in range(len(risk_factors)):
+        # risk_factors[i].update(get_risk_factor_html(risk_factors_data[i]))
+        # cost_drivers[i].update(get_cost_driver_html(cost_drivers_data[i]))
 
-    # chatbot = gr.Chatbot()
-
-    interface = gr.ChatInterface(
-        predict,
-        # chatbot=chatbot,
-    )
-    return interface
-    # interface.chatbot.change(
-    #     fn=update,
-    #     inputs=risk_factors,
-    #     outputs=cost_drivers,
+    # interface = gr.ChatInterface(
+    # predict,
+    # chatbot=gr.Chatbot(),
     # )
+
+    # def test(input):
+    #     return "hello world"
+
+    # interface.chatbot.change(test, interface.chatbot, risk_factors[0])
+    # text_input = gr.Textbox(placeholder="hi")
+    # textOutput = gr.Textbox(placeholder="hi")
+    # interface.chatbot.change(lambda x: "hi", text_input, textOutput)
+    # return interface
