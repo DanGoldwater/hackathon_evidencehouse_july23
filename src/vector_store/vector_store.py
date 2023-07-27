@@ -1,51 +1,83 @@
 import os
 import pandas
-from time import sleep
-import langchain
 from sentence_transformers import SentenceTransformer
-from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
 from transformers import DistilBertTokenizer, DistilBertModel
 import faiss
 import numpy as np
-from langchain.embeddings import HuggingFaceEmbeddings
 from dotenv import load_dotenv
 
 
 FAISS_PATH = "faiss_index.pkl"
+FAISS_PATH2 = "faiss_index2.pkl"
+FAISS_SMALL_PATH = 'src/data/smaller'
 
 load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 
 
-tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
-model = DistilBertModel.from_pretrained("distilbert-base-uncased")
+# tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
+# model = DistilBertModel.from_pretrained("distilbert-base-uncased")
+# from langchain.document_loaders import 
+import faiss
+import numpy as np
+import pickle
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.embeddings.openai import OpenAIEmbeddings
+from langchain.text_splitter import CharacterTextSplitter
+from langchain.vectorstores import FAISS
+from langchain.document_loaders import TextLoader
+from sentence_transformers import SentenceTransformer
 
+
+# def get_embeddings_for_documnts(docs, path):
+#     from langchain.embeddings import OpenAIEmbeddings
+#     from langchain.vectorstores import FAISS
+#     print('getting embeddings')
+#     embeddings_getter = OpenAIEmbeddings()
+#     embeddings = FAISS.from_texts(docs, embeddings_getter)
+#     with open(path, 'wb') as f:
+#         pickle.dump(embeddings, f)
+#     return embeddings
 
 def get_main_df():
     return pandas.read_csv(
-        "src/data/Contract_Data.csv"
+        "src/data/smaller.csv"
     )
+EmbeddingsOpenAi =  OpenAIEmbeddings(model='text-embedding-ada-002')
+
+from langchain.embeddings import OpenAIEmbeddings
+from langchain.schema.document import Document
+from langchain.vectorstores import FAISS
+
+def get_embeddings_and_index(df, path):
+    df = df.sample(n=10)
+    
+
+    # Store the DataFrame index in the Document metadata
+    documents = []
+    for index, row in df.iterrows():
+        d = Document(text=row['text'], metadata={'df_index': index}, page_content=row['text']) 
+        documents += [d]
+
+    db = FAISS.from_documents(documents=documents, embedding=EmbeddingsOpenAi)
+    db.save_local(path)
+
+    print('ok')
+    return db
 
 
-def make_local_faiss_db(df):
-    model = SentenceTransformer("all-mpnet-base-v2")
+def query_vector_store(df, path, query_text):
+    db = FAISS.load_local(path, embeddings=EmbeddingsOpenAi)
+    query_document = Document(text=query_text, page_content=query_text)
 
-    # Get embeddings for each row
-    embeds = []
-    for i, row in df.iterrows():
-        text = get_text_from_row(row)
-        embed = model.encode(text)
-        embeds.append(embed)
-    # embeddings = [model.encode(row['Text']) for idx, row in df.iterrows()]
+    # Query the VectorStore
+    results = db.similarity_search(query=query_text)
+    # query(query_document)
 
-    embeds = np.array(embeds)
-    index = faiss.IndexIDMap(faiss.IndexFlatIP(768))
+    # Retrieve the matching rows from the DataFrame
+    matching_rows = df[df.index.isin([doc.metadata['df_index'] for doc in results])]
 
-    # Add embeddings to index
-    index.add_with_ids(embeds, np.arange(len(embeds)))
-
-    # Save index
-    faiss.write_index(index, FAISS_PATH)
+    return matching_rows
 
 
 def get_text_from_row(row):
@@ -86,7 +118,16 @@ def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), t
 
 def main():
     df = get_main_df()
-    make_local_faiss_db(df=df.sample(n=30))
+    print(len(df))
+    # make_local_faiss_db(df=df.sample(n=30))
+    # get_embeddings_and_index(df=df, path=FAISS_SMALL_PATH)
+    ddf = query_vector_store(df=df, 
+                             path=FAISS_SMALL_PATH,
+                             query_text='We are building a tiny battleship. It has to run on woodsmoke')
+    for d in ddf['Description']:
+        print(d)
+    
+    print('done')
     
     
     # sub_df = get_nearest_rows_from_df(query="Biggest NHS procure", df=df, top_k=2)
