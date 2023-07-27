@@ -11,7 +11,7 @@ from src.ui.backend.llm_inference import (
 )
 from src.ui.components.risk_factors_tab import get_risk_factor_html
 from src.ui.components.cost_drivers_tab import get_cost_driver_html
-from src.ui.components.graphs_tab import costs_barchart_ui
+from src.ui.components.graphs_tab import costs_barchart_ui, graphs_tab_ui
 from src.vector_store import vector_store
 
 TOP_K_SIMILAR_CONTRACTS = 5
@@ -41,6 +41,7 @@ def chat_ui(
                 query_text=message
             )
             
+<<<<<<< HEAD
             # sub_df = vector_store.get_nearest_rows_from_df(
             #     query=message,
             #     df=vector_store.get_main_df(),
@@ -56,6 +57,16 @@ def chat_ui(
                     input_description= message, 
                     sub_df_context= text_from_sub_df
                     )}
+=======
+            print(sub_df["Additional Text"])
+            
+            sub_df = embellish.embellish_dataframe(df=sub_df)
+            
+            text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
+            graphs_tab_ui(df=sub_df)
+            chat_messages.append( #TODO - change back
+                {"role": "user", "content": load_intial_prompt(message, text_from_sub_df)}
+>>>>>>> 21c0770 (add more to graphs)
             )
         else:
             chat_messages.append({"role": "user", "content": message})

@@ -13,16 +13,19 @@ DUMMY_DATA = pd.DataFrame(
      "unforseen_costs": ["Overspend on IT", "Unexpected inflation", "Supplier went bust", "Pandemic-related costs", "Cost of materials increased"],
     })
 
+# TODO - a hack!
+dummy_data = pd.DataFrame({"Notice Identifier": [], "Estimate - Labour: A-AAA":[], "Estimate - Labour: B - BBB":[], "Estimate - Overhead: A-AAA":[], "Estimate - Overhead: B - BBB":[], 'Estimate - Materials: A-AAA':[], 'Estimate - Materials: B - BBB':[], "Total Estimate": []})
 
-def costs_barchart_ui(df=pd.DataFrame()):
-    if not df.empty:
-        id_col = "Notice Identifier"
-        categories = ["Estimate - Labour: A-AAA", "Estimate - Labour: B - BBB", "Estimate - Overhead: A-AAA", "Estimate - Overhead: B - BBB", 'Estimate - Materials: A-AAA', 'Estimate - Materials: B - BBB']
-        categories_and_id = [id_col, "Estimate - Labour: A-AAA", "Estimate - Labour: B - BBB", "Estimate - Overhead: A-AAA", "Estimate - Overhead: B - BBB", 'Estimate - Materials: A-AAA', 'Estimate - Materials: B - BBB']
-        
-        # Total costs bar chart
-        total_costs_df = df[[id_col, "Total Estimate"]] # TODO check column names including 
-        gr.BarPlot(total_costs_df, x=id_col, y="Total Estimate", title="Estimated costs of similar projects", min_width=1200)
+def costs_barchart_ui(df):
+  
+    id_col = "Notice Identifier"
+    categories = ["Estimate - Labour: A-AAA", "Estimate - Labour: B - BBB", "Estimate - Overhead: A-AAA", "Estimate - Overhead: B - BBB", 'Estimate - Materials: A-AAA', 'Estimate - Materials: B - BBB']
+    categories_and_id = [id_col, "Estimate - Labour: A-AAA", "Estimate - Labour: B - BBB", "Estimate - Overhead: A-AAA", "Estimate - Overhead: B - BBB", 'Estimate - Materials: A-AAA', 'Estimate - Materials: B - BBB']
+    
+    # Total costs bar chart
+    total_costs_df = df[[id_col, "Total Estimate"]] # TODO check column names including 
+    print("I expect a bar plot")
+    gr.BarPlot(total_costs_df, x=id_col, y="Total Estimate", title="Estimated costs of similar projects", min_width=1200)
 
         # Stacked 
         stacked_df = df[categories_and_id]
@@ -35,13 +38,8 @@ def costs_barchart_ui(df=pd.DataFrame()):
     #     unforseen_costs = df["unforseen_costs"].values.tolist()
     #     for description in unforseen_costs:
     #         gr.HTML(f"<li>{description}</li>")
-        # Unforseen costs
-        gr.HTML("<b>Unforseen costs</b>")
-        with gr.Column():
-            unforseen_costs = df["unforseen_costs"].values.tolist()
-            for description in unforseen_costs:
-                gr.HTML(f"<li>{description}</li>")
 
 
-def graphs_tab_ui():
-    return costs_barchart_ui()
+def graphs_tab_ui(df=dummy_data):
+    print(df)
+    return costs_barchart_ui(df)

@@ -94,8 +94,13 @@ def get_text_from_row(row):
 def get_strucutred_text_from_small_df(df):
     string_out = ''
     for i, row in df.iterrows():
+<<<<<<< HEAD
         title = 'Title: ' + str(row['Title'])
         description = 'Description: ' + str(row['Description'])
+=======
+        title = 'Title: ' + row['Title']
+        description = 'Description: ' + row['Description']
+>>>>>>> 21c0770 (add more to graphs)
         additional_text = 'Additional Text: ' + str(row['Additional Text'])
     string_out = string_out + title + description + additional_text + '\n\n'
     return string_out
