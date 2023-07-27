@@ -36,14 +36,6 @@ import numpy as np
 
 from langchain.embeddings import HuggingFaceEmbeddings
 
-# model_name = "sentence-transformers/all-mpnet-base-v2"
-# model_kwargs = {'device': 'cpu'}
-# encode_kwargs = {'normalize_embeddings': False}
-# hf = HuggingFaceEmbeddings(
-#     model_name=model_name,
-#     model_kwargs=model_kwargs,
-#     encode_kwargs=encode_kwargs
-# )
 from dotenv import load_dotenv
 
 
@@ -62,7 +54,7 @@ def get_main_df():
         "src/data/nhs_contract_data/NHS_early_future_opportunity_awarded_closed.csv"    )
     
 
-def local_faisss_again(df):
+def make_local_faiss_db(df):
     model = SentenceTransformer('all-mpnet-base-v2')
 
     # Get embeddings for each row 

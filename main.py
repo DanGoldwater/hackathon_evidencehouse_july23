@@ -1,39 +1,13 @@
-import langchain
-import dotenv
-import openai
-from langchain.llms import OpenAI
-from langchain import PromptTemplate, LLMChain
+from src.vector_store import vector_store
+from src.embellish import embellish
+df = vector_store.get_main_df()
 
-# from dotenv import load_dotenv, find_dotenv
+# print(df.columns)
 
-# load_dotenv(find_dotenv())
+df = embellish.embellish_dataframe(df.sample(n=3))
 
-import os
-
-key = ""
-os.environ["OPENAI_API_KEY"] = ""
-
-# g4 = OpenAI(model='gpt-4')
-
-# g4('What is a horse')
-llm = OpenAI(openai_api_key=key)
-
-template = """Question: {question}
-
-Answer: Let's think step by step."""
-
-prompt = PromptTemplate(template=template, input_variables=["question"])
-
-llm_chain = LLMChain(prompt=prompt, llm=llm)
-
-completion = (
-    openai.ChatCompletion.create(  # Change the function Completion to ChatCompletion
-        model="gpt-3.5-turbo",
-        messages=[  # Change the prompt parameter to the messages parameter
-            {"role": "user", "content": "What is a horse?"}
-        ],
-        temperature=0,
-    )
-)
-
-print(completion["choices"][0]["message"]["content"])
+for i, row in df.iterrows():
+    # print(df['title'])
+    print(df['Description'])
+    print(df['unforseen_costs'])
+    print('-' * 50)
