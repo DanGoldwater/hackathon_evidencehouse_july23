@@ -11,8 +11,6 @@ API_KEY = os.environ["ANTHROPIC_API_KEY"]
 
 
 import pandas as pd
-import requests
-import time
 
 from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
 
@@ -42,7 +40,7 @@ def get_anthropic_embellishment(
     return clean_up_text(completion.completion)
 
 
-desc = "We built a thousand ships, all of them in Theseus. None looked alike"
+# desc = "We built a thousand ships, all of them in Theseus. None looked alike"
 
 # print(get_anthropic_embellishment(
 #     description=desc,
