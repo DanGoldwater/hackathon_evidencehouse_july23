@@ -2,7 +2,8 @@ import os
 import openai
 import textwrap
 from dotenv import load_dotenv
-from typing import Generator, Union
+from typing import Generator, Union, Dict, List
+
 
 load_dotenv()
 
@@ -35,7 +36,7 @@ def load_intial_prompt(input_description: str) -> str:
 
 
 def create_chat_completion(
-    messages: list[dict[str, str]], model_type: str = "gpt-3.5-turbo-0613"
+    messages: List[Dict[str, str]], model_type: str = "gpt-3.5-turbo-0613"
 ) -> Union[Generator, str]:
     response = openai.ChatCompletion.create(
         messages=messages,

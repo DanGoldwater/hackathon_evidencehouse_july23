@@ -6,15 +6,12 @@ from pydantic import BaseModel
 from typing import List, Dict, Optional
 from fastapi.responses import StreamingResponse
 from llm import create_chat_completion
+from llm import load_system_prompt, load_intial_prompt
 
 
 app = FastAPI()
 
 # Example data (Replace this with a database or other data storage in a real app)
-
-
-class ChatInput(BaseModel):
-    messages: list[dict[str, str]]
 
 
 class RiskFactor(BaseModel):
@@ -32,14 +29,43 @@ class CostDriver(BaseModel):
     max_cost: Optional[float]
 
 
+class ChatInput(BaseModel):
+    prompt: str
+
+
+chat_history = [
+    {
+        "role": "system",
+        "content": load_system_prompt(),
+    }
+]
+
+
 @app.post("/chat")
 def chat(chat_input: ChatInput):
+    if len(chat_history) == 1:
+        # Add the instruction prompt if it the first one
+        chat_history.append(
+            {
+                "role": "user",
+                "content": load_intial_prompt(chat_input.prompt),
+            }
+        )
+    else:
+        # Otherwise just add the user input
+        chat_history.append(
+            {
+                "role": "user",
+                "content": chat_input.prompt,
+            }
+        )
+
     response = openai.ChatCompletion.create(
-        messages=chat_input.messages,
+        messages=chat_history,
         model="gpt-3.5-turbo-0613",
         stream=True,
     )
-    return StreamingResponse(response, media_type="text")
+    return response
 
 
 @app.post("/parse_cost_drivers")

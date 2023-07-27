@@ -1,0 +1,9 @@
+chromadb==0.4.3
+faiss_cpu==1.7.4
+numpy==1.24.3
+openai==0.27.8
+pandas==2.0.3
+pydantic==1.10.12
+sentence_transformers==2.2.2
+torch==2.0.1
+transformers==4.31.0
