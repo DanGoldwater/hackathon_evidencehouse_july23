@@ -1,31 +1,10 @@
-from langchain.embeddings import OpenAIEmbeddings
-from langchain.vectorstores import FAISS
-from langchain.document_loaders import TextLoader
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import Chroma
-from langchain.document_loaders import DirectoryLoader
-import pathlib
 import os
-import langchain
-import chromadb
-from langchain.embeddings.openai import OpenAIEmbeddings
 import pandas
-import xml.etree.ElementTree as ET
-import pickle
-import time
-import langchain
-from langchain.embeddings import OpenAIEmbeddings
 from time import sleep
 import langchain
 from sentence_transformers import SentenceTransformer
 from langchain.embeddings.sentence_transformer import SentenceTransformerEmbeddings
-from langchain.document_loaders import TextLoader
-from langchain.embeddings.openai import OpenAIEmbeddings
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.vectorstores import Chroma
 from transformers import DistilBertTokenizer, DistilBertModel
-import torch
 import faiss
 import numpy as np  
 # Load the document, split it into chunks, embed each chunk and load it into the vector store.
