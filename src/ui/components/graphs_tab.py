@@ -5,12 +5,12 @@ import pandas as pd
 # TODO - replace dummy data
 # Check column names
 DUMMY_DATA = pd.DataFrame(
-    {"Name": ["Proj 1", "Proj 2", "Proj 3", "Proj 4"],
-     "Total Value": [45, 67, 78, 32],
-     "Labour": [10, 20, 10, 10],
-     "Overhead": [10, 10, 10, 10],
-     "Materials": [25, 37, 58, 12],
-     "unforseen_costs": ["cost 1", "r", 'R', "l"],
+    {"Name": ["Project 1", "Project 2", "Project 3", "Project 4", "Project 5"],
+     "Total Value": [45, 67, 78, 32, 46],
+     "Labour": [10, 20, 7, 10, 12],
+     "Overhead": [10, 10, 13, 10, 30],
+     "Materials": [25, 37, 58, 12, 4],
+     "unforseen_costs": ["Overspend on IT", "Unexpected inflation", "Supplier went bust", "Pandemic-related costs", "Cost of materials increased"],
     })
 
 
