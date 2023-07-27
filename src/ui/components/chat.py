@@ -1,26 +1,23 @@
 import time
 import random
 import gradio as gr
+from src.ui.backend.consts import MODEL_TYPE
+from src.ui.backend.llm_inference import create_chat_completion
 
 
 def chat_ui():
-    chatbot = gr.Chatbot(elem_id="chatbot")
-    msg = gr.Textbox()
-    clear = gr.Button("Clear")
+    def predict(message, history):
+        chat_messages = []
+        for human, assistant in history:
+            chat_messages.append({"role": "user", "content": human})
+            chat_messages.append({"role": "assistant", "content": assistant})
+        chat_messages.append({"role": "user", "content": message})
 
-    def user(user_message, history):
-        return "", history + [[user_message, None]]
+        stream = create_chat_completion(messages=chat_messages)
 
-    def bot(history):
-        bot_message = random.choice(["test", "test2", "test3"])
-        history[-1][1] = ""
-        for character in bot_message:
-            history[-1][1] += character
-            time.sleep(0.05)
-            yield history
+        response = ""
+        for chunk in stream:
+            response += chunk
+            yield response
 
-    msg.submit(user, [msg, chatbot], [msg, chatbot], queue=False).then(
-        bot, chatbot, chatbot
-    )
-    clear.click(lambda: None, None, chatbot, queue=False)
-    return chatbot, msg, clear
+    return gr.ChatInterface(predict)
