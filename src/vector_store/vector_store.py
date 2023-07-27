@@ -30,24 +30,24 @@ import faiss
 import numpy as np  
 # Load the document, split it into chunks, embed each chunk and load it into the vector store.
 
-tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
-model = DistilBertModel.from_pretrained('distilbert-base-uncased')
+# tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
+# model = DistilBertModel.from_pretrained('distilbert-base-uncased')
 
 
 from langchain.embeddings import HuggingFaceEmbeddings
 
-model_name = "sentence-transformers/all-mpnet-base-v2"
-model_kwargs = {'device': 'cpu'}
-encode_kwargs = {'normalize_embeddings': False}
-hf = HuggingFaceEmbeddings(
-    model_name=model_name,
-    model_kwargs=model_kwargs,
-    encode_kwargs=encode_kwargs
-)
+# model_name = "sentence-transformers/all-mpnet-base-v2"
+# model_kwargs = {'device': 'cpu'}
+# encode_kwargs = {'normalize_embeddings': False}
+# hf = HuggingFaceEmbeddings(
+#     model_name=model_name,
+#     model_kwargs=model_kwargs,
+#     encode_kwargs=encode_kwargs
+# )
 from dotenv import load_dotenv
 
-CHROMA = './chroma_db'
-FAISS_PATH = './faiss'
+
+FAISS_PATH = 'faiss_index.pkl'
 
 load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
@@ -55,6 +55,13 @@ key = os.getenv("OPENAI_API_KEY")
 
 tokenizer = DistilBertTokenizer.from_pretrained('distilbert-base-uncased')
 model = DistilBertModel.from_pretrained('distilbert-base-uncased')
+
+
+def get_main_df():
+    return pandas.read_csv(
+        "src/data/nhs_contract_data/NHS_early_future_opportunity_awarded_closed.csv"    )
+    
+
 def local_faisss_again(df):
     model = SentenceTransformer('all-mpnet-base-v2')
 
@@ -73,12 +80,9 @@ def local_faisss_again(df):
     index.add_with_ids(embeds, np.arange(len(embeds))) 
 
     # Save index
-    faiss.write_index(index, 'faiss_index.pkl')
-def get_embedding(text):
-    inputs = tokenizer(text, return_tensors='pt')
-    outputs = model(**inputs)
-    embeddings = outputs.last_hidden_state[:, 0, :].detach().numpy()
-    return embeddings
+    faiss.write_index(index, FAISS_PATH)
+
+
 
 def get_text_from_row(row):
     title = row["Title"]    
@@ -89,74 +93,30 @@ def get_text_from_row(row):
     text = str(title) + " " + description + " " + str(additional_text)
     return text
 
-def make_faiss_locally(df):
-    embeddings = [] 
-    texts = []
-    for index, row in df.iterrows():
-        text = get_text_from_row(row)
-        texts.append(text)
-        
-    embedding = get_embedding(text)
-    embeddings.append(embedding)
 
-    # Create a FAISS index
-    d = embeddings[0].shape[1]
-    index = faiss.IndexFlatL2(d)
-    index.add(np.vstack(embeddings))
-
-    # Save the FAISS index to a file
-    faiss.write_index(index, 'faiss_index.bin')
-
-
-def get_embeddings_for_documnts(docs, path):
-    retries = 0
-    max_retries = 30
-    backoff_factor = 2
-    print('getting embeddings')
-    embeddings_getter = OpenAIEmbeddings(model='text-embedding-ada-002')
-    embeddings_getter = get_embedding_locally
+def get_nearest_rows_from_df(query:str, df: pandas.DataFrame=get_main_df(), top_k=5):
+    model = SentenceTransformer('all-mpnet-base-v2')
+    index = faiss.read_index(FAISS_PATH)
     
-    with open(path, 'wb') as f:
-        pickle.dump(embeddings, f)
-    return embeddings
-
-def get_embedding_locally(text):
-    # Tokenize the input text
-    inputs = tokenizer(text, return_tensors='pt')
-
-    # Get the embeddings from the DistilBERT model
-    outputs = model(**inputs)
-    embeddings = outputs.last_hidden_state[:, 0, :].detach().numpy()
-
-    return embeddings
-
-
-def create_vectorstore_from_NHS_df(df):
-    # Initialize docs list
-    docs = []
-   
-    for index, row in df.iterrows():
-        # Extract columns for this row
-        title = row["Title"]
-        description = row["Description"]
-        additional_text = row["Additional Text"]
-
-        # Concatenate into single doc
-        doc = str(title) + " " + description + " " + str(additional_text)
-
-        # Add to docs list
-        docs.append(doc)
-    get_embeddings_for_documnts(docs=docs, path=FAISS_PATH)
+    # Encode query and reshape it to 2D
+    query_emb = model.encode(query).reshape(1, -1)
     
-
+    # Search index
+    distances, indices = index.search(query_emb, top_k)
+    
+    # Flatten the indices array
+    indices = indices.flatten()
+    
+    # Get most similar rows
+    sub_df = df.loc[indices]
+    return sub_df
 
 
 def main():
-    df = pandas.read_csv(
-        "src/data/nhs_contract_data/NHS_early_future_opportunity_awarded_closed.csv"    )
+    df = get_main_df()
+    sub_df = get_nearest_rows_from_df(query='Biggest NHS procure', top_k=2)
+    print(sub_df.head())
     
-    # make_faiss_locally(df=df)
-    local_faisss_again(df.sample(n=10))
 
 
 if __name__ == "__main__":
