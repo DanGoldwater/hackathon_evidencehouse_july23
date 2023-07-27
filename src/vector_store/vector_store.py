@@ -54,3 +54,5 @@ def create_vectorstore(folder):
   vs = Vectorstore(docs, embedding=embeddings)
   
   return vs
+
+#%%
