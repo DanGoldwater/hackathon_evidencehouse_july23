@@ -33,19 +33,20 @@ def chat_ui(
 
         # If its the first message use the initial prompt (and vector db query)
         if len(chat_messages) == 1:
-            
             sub_df = vector_store.get_nearest_rows_from_df(
                 query=message,
                 df=vector_store.get_main_df(),
-                top_k=TOP_K_SIMILAR_CONTRACTS
-                )
-            
-            sub_df = embellish.embellish_dataframe(df=sub_df)
-            
-            text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
+                top_k=TOP_K_SIMILAR_CONTRACTS,
+            )
 
+            sub_df = embellish.embellish_dataframe(df=sub_df)
+
+            text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
             chat_messages.append(
-                {"role": "user", "content": load_intial_prompt(message, text_from_sub_df)}
+                {
+                    "role": "user",
+                    "content": load_intial_prompt(message, text_from_sub_df),
+                }
             )
         else:
             chat_messages.append({"role": "user", "content": message})
@@ -68,4 +69,5 @@ def chat_ui(
 
     return gr.ChatInterface(
         predict,
+        chatbot=gr.Chatbot(label="Chatbot", elem_id=29),
     )
