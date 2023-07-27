@@ -15,7 +15,7 @@ def load_system_prompt() -> str:
     return "You are a data analyst in charge of assisting the UK government with procurement of contracts"
 
 
-def load_intial_prompt(input_description: str) -> str:
+def load_intial_prompt(input_description: str,) -> str:
     prompt = textwrap.dedent(
         f"""
     The UK government is doing a procurement of {input_description}. 
