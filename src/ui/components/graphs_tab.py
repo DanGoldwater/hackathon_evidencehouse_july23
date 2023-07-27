@@ -9,7 +9,8 @@ DUMMY_DATA = pd.DataFrame(
      "Total Value": [45, 67, 78, 32],
      "Labour": [10, 20, 10, 10],
      "Overhead": [10, 10, 10, 10],
-     "Materials": [25, 37, 58, 12]
+     "Materials": [25, 37, 58, 12],
+     "unforseen_costs": ["cost 1", "r", 'R', "l"],
     })
 
 
@@ -23,6 +24,13 @@ def costs_barchart_ui(df=DUMMY_DATA):
     stacked_df = stacked_df.melt(id_vars="Name", value_vars=["Labour", "Overhead", "Materials"])
     print(stacked_df.head())
     gr.BarPlot(stacked_df, x="Name", y="value", color="variable", title="Costs split by type")
+
+    # Unforseen costs
+    gr.HTML("<b>Unforseen costs</b>")
+    with gr.Column():
+        unforseen_costs = df["unforseen_costs"].values.tolist()
+        for description in unforseen_costs:
+            gr.HTML(f"<li>{description}</li>")
 
 
 def graphs_tab_ui():
