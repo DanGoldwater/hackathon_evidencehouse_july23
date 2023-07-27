@@ -12,6 +12,10 @@ from src.ui.components.risk_factors_tab import get_risk_factor_html
 from src.ui.components.cost_drivers_tab import get_cost_driver_html
 
 
+def update(inputs: str):
+    return "hello world" + inputs
+
+
 def chat_ui(
     risk_factors: list[gr.Blocks],
     cost_drivers: list[gr.Blocks],
@@ -49,10 +53,19 @@ def chat_ui(
             risk_factors_data = parse_risk_factors_data(response)
             cost_drivers_data = parse_cost_drivers_data(response)
 
-            for i in range(len(risk_factors)):
-                risk_factors[i].update(get_risk_factor_html(risk_factors_data[i]))
-                cost_drivers[i].update(get_cost_driver_html(cost_drivers_data[i]))
+            # for i in range(len(risk_factors)):
+            # risk_factors[i].update(get_risk_factor_html(risk_factors_data[i]))
+            # cost_drivers[i].update(get_cost_driver_html(cost_drivers_data[i]))
 
-    return gr.ChatInterface(
+    # chatbot = gr.Chatbot()
+
+    interface = gr.ChatInterface(
         predict,
+        # chatbot=chatbot,
     )
+    return interface
+    # interface.chatbot.change(
+    #     fn=update,
+    #     inputs=risk_factors,
+    #     outputs=cost_drivers,
+    # )

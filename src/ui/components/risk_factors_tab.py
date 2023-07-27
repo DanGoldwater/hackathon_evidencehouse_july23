@@ -37,14 +37,13 @@ def get_risk_factor_html(risk_factor: RiskFactor):
 
 
 def risk_factors_tab_ui(risk_factors: list[RiskFactor]):
-    with gr.Column():
-        return_elements = []
-        for factor in risk_factors:
-            rendered_el = gr.HTML(
-                get_risk_factor_html(factor),
-                interactive=True,
-            )
-            rendered_el = rendered_el.update(value="<div></div>")
-            return_elements.append(rendered_el)
+    # with gr.Column():
+    return_elements = []
+    for factor in risk_factors:
+        rendered_el = gr.HTML(
+            get_risk_factor_html(factor),
+            interactive=True,
+        )
+        return_elements.append(rendered_el)
 
-        return return_elements
+    return return_elements
