@@ -1,9 +1,9 @@
 import os
 import openai
 import textwrap
-from typing import Generator
 from .consts import MODEL_TYPE
 from dotenv import load_dotenv
+from typing import Generator, Union
 
 load_dotenv()
 
@@ -19,19 +19,30 @@ def load_intial_prompt(input_description: str) -> str:
     prompt = textwrap.dedent(
         f"""
     The UK government is doing a procurement of {input_description}. 
-    Please give me a list of bullet points with key drivers of costs and key risks with this type of procurement"""
+    Please give me a list of bullet points with key drivers of costs and key risks with this type of procurement
+    Return your answer in the format:
+ 
+    Cost Drivers (Title, MinCost (GBP), MaxCost (GBP), Description):
+    ...
+
+    Risks (Title, Description, MinCost (GBP), MaxCost (GBP), Likelihood (eg: Moderate), Impact (eg: High)):
+    ...
+
+    Summary:
+    ...
+    """
     )
     return prompt
 
 
 def create_chat_completion(
     messages: list[dict[str, str]],
-) -> Generator:
-    stream = openai.ChatCompletion.create(
+) -> Union[Generator, str]:
+    response = openai.ChatCompletion.create(
         messages=messages,
         model=MODEL_TYPE,
         stream=True,
     )
-    for chunk in stream:
+    for chunk in response:
         if len(chunk["choices"][0]["delta"]) != 0:
             yield chunk["choices"][0]["delta"]["content"]
