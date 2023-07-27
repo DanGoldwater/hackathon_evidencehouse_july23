@@ -40,12 +40,6 @@ def get_anthropic_embellishment(
     return clean_up_text(completion.completion)
 
 
-# desc = "We built a thousand ships, all of them in Theseus. None looked alike"
-
-# print(get_anthropic_embellishment(
-#     description=desc,
-#     pre_prompt=PRE_PROMPT
-# ))
 
 
 def embellish_dataframe(df: pd.DataFrame):
