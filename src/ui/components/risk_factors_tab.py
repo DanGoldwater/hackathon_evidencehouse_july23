@@ -1,8 +1,23 @@
 import gradio as gr
+from pydantic import BaseModel
+from src.ui.models import RiskFactor
 
 
-def risk_factors_tab_ui(risk_factors: list[str]):
+def risk_factors_tab_ui(risk_factors: list[RiskFactor]):
     with gr.Column():
-        gr.TextArea(
-            value="\n\n".join(risk_factors), min_lines=4, max_lines=30, readonly=True
-        )
+        for factor in risk_factors:
+            gr.HTML(
+                f"""
+            <div style='font-size:20px'>
+                <b>
+                    {factor.title}
+                    <span style='color:red; margin-left:10px'> Risk: {factor.risk_probability}</span>
+                    <span style='color:green; margin-left:10px'> Cost: ${factor.cost_increase_millions}M</span>
+                </b>
+                <br/>
+            </div>
+            <div style='font-size:18px'>
+                {factor.description}
+            </div>
+            """
+            )
