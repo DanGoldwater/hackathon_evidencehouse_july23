@@ -89,8 +89,12 @@ export default function BasicTabs(props: Tabs) {
           ) : (
             <div>
               <h1 className="text-large">Overview</h1>
-              <p>{props.summary.overview}</p>
+              <p>{props.summary.overview}
+        {props.summary.similairProjects.length}
+              
+              </p>
               <hr />
+
               <BoxPlot
                 label={"Costs"}
                 data={[
@@ -98,8 +102,43 @@ export default function BasicTabs(props: Tabs) {
                   { min: 200, q1: 300, median: 400, q3: 500, max: 600 },
                 ]}
               />
+              <h1>Similair Projects</h1>
+              {props.summary.similairProjects.map((project) => (
+                <div>
+                  <div className="flex flex-col">
+                    <div style={{ fontSize: "20px" }}>
+                      <b>
+                        {project.name}
+                        <span style={{ color: "green", marginLeft: "10px" }}>
+                          {" "}
+                          {/* Display in millions if long enough otherwise thousands */}
+                          Expected Cost: ${project.expectedCost}
+                        </span>
+                        <span style={{ color: "green", marginLeft: "10px" }}>
+                          {" "}
+                          {/* Display in millions if long enough otherwise thousands */}
+                          Actual Cost: ${project.actualCost}
+                        </span>
+                      </b>
+                      <br />
+                    </div>
+                    <div
+                      className="mt-5"
+                      style={{
+                        fontSize: "18px",
+                        marginBottom: "15px",
+                        marginTop: "20px",
+                      }}
+                    >
+                      Timeframe:
+                      {project.timeframe}
+                    </div>
+                    <hr />
+                    <br />
+                  </div>
+                </div>
+              ))}
 
-              <h1>Time Frame</h1>
               {/* <BarChart
                 labels={
                   props.summary.similairProjects.map(
