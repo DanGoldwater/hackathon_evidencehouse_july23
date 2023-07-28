@@ -11,6 +11,7 @@ FAISS_PATH = "faiss_index.pkl"
 FAISS_PATH2 = "faiss_index2.pkl"
 FAISS_OPAI_PATH = 'src/data/from_opai'
 
+
 load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 
@@ -29,15 +30,6 @@ from langchain.document_loaders import TextLoader
 from sentence_transformers import SentenceTransformer
 
 
-# def get_embeddings_for_documnts(docs, path):
-#     from langchain.embeddings import OpenAIEmbeddings
-#     from langchain.vectorstores import FAISS
-#     print('getting embeddings')
-#     embeddings_getter = OpenAIEmbeddings()
-#     embeddings = FAISS.from_texts(docs, embeddings_getter)
-#     with open(path, 'wb') as f:
-#         pickle.dump(embeddings, f)
-#     return embeddings
 
 def get_main_df():
     return pandas.read_csv(
@@ -52,7 +44,7 @@ from langchain.schema.document import Document
 from langchain.vectorstores import FAISS
 
 def get_embeddings_and_index(df, path):
-    df = df.sample(n=10)
+    # df = df.sample(n=10)
     
 
     # Store the DataFrame index in the Document metadata
@@ -123,13 +115,13 @@ def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), t
 def main():
 
     # make_local_faiss_db(df=df.sample(n=30))
-    # get_embeddings_and_index(df=DF, path=FAISS_OPAI_PATH)
+    get_embeddings_and_index(df=DF, path=FAISS_OPAI_PATH)
     print('querying')
-    ddf = query_vector_store(df=DF, 
-                             path=FAISS_OPAI_PATH,
-                             query_text='Our plan is to procure four hundred new street lamps for our count')
-    for d in ddf['Description']:
-        print(d)
+    # ddf = query_vector_store(df=DF, 
+    #                          path=FAISS_OPAI_PATH,
+    #                          query_text='Our plan is to procure four hundred new street lamps for our count')
+    # for d in ddf['Description']:
+    #     print(d)
     
     print('done')
     

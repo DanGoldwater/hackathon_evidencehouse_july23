@@ -37,7 +37,10 @@ ensure the answer is a valid JSON object parsable using JSON.parse(answer) retur
         output += chunk
     print(output)
     cost_drivers = []
-    output = json.loads(output)
+    try:
+        output = json.loads(output)
+    except:
+        pass
     for cost_driver in output:
         if type(cost_driver.get("min_cost", "")) is str:
             cost_driver["min_cost"] = None
