@@ -17,7 +17,8 @@ DUMMY_DATA = pd.DataFrame(
 dummy_data = pd.DataFrame({"Notice Identifier": [], "Estimate - Labour: A-AAA":[], "Estimate - Labour: B - BBB":[], "Estimate - Overhead: A-AAA":[], "Estimate - Overhead: B - BBB":[], 'Estimate - Materials: A-AAA':[], 'Estimate - Materials: B - BBB':[], "Total Estimate": []})
 
 def costs_barchart_ui(df):
-  
+    print(df)
+
     id_col = "Notice Identifier"
     categories = ["Estimate - Labour: A-AAA", "Estimate - Labour: B - BBB", "Estimate - Overhead: A-AAA", "Estimate - Overhead: B - BBB", 'Estimate - Materials: A-AAA', 'Estimate - Materials: B - BBB']
     categories_and_id = [id_col, "Estimate - Labour: A-AAA", "Estimate - Labour: B - BBB", "Estimate - Overhead: A-AAA", "Estimate - Overhead: B - BBB", 'Estimate - Materials: A-AAA', 'Estimate - Materials: B - BBB']
