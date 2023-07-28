@@ -22,7 +22,7 @@ with gr.Blocks(
     with gr.Row(equal_height=False):
         with gr.Column(scale=2, min_width=600):
             with gr.Tab("Graphs"):
-                graphs = graphs_tab_ui()
+                barplot1, barplot2, unforseen_costs_html = graphs_tab_ui()
             with gr.Tab("Risk Factors"):
                 risk_factors_element = risk_factors_tab_ui(
                     [
@@ -78,40 +78,16 @@ with gr.Blocks(
                 )
 
             with gr.Tab("Summary"):
-                summary_tab_ui(
-                    """
-            # Project Summary: Procurement of 10x Submarines
-            ## I. Project Overview 
-            The project aims to procure 10 state-of-the-art submarines to enhance our naval capabilities. 
-            These submarines will be outfitted with advanced onboard systems, stealth technology, and high-strength steel hulls. 
-
-            ## II. Project Scope 1. 
-            **Procurement of 10 Submarines**: 
-            Submarines must be capable of long-range operations, equipped with advanced stealth technologies, 
-            and meet all international and domestic regulatory requirements. 
-            2. **Training**: Training programs for crew members and maintenance personnel. 
-            3. **Maintenance & Support**: A comprehensive maintenance package for a 5-year period, including spare parts, regular system upgrades, and technical support. 
-            4. **Delivery & Commissioning**: Safe delivery and commissioning of the submarines at designated naval bases. 
-            ## III. Budget The estimated budget for this project is currently confidential,
-            subject to adjustments depending on market conditions and the final technical specifications of the submarines. 
-            ## IV. Timeline The project is expected to be completed in a span of 5-7 years, including the bidding process, construction, 
-            testing, delivery, and commissioning. 
-            ## V. Key Stakeholders 
-            - 1. Ministry of Defense (Project Owner) 
-            - 2. Selected Contractor (Submarine Supplier)
-            - 3. Naval Command (End Users) 4. Training Providers (For Crew and Maintenance Personnel) 
-            ## VI. Risk Analysis
-            Several risk factors have been identified and will be closely monitored throughout the project. These include: 
-            """
-                )
+                markdown = summary_tab_ui("")
 
         with gr.Column(scale=2, min_width=600):
-            test = gr.HTML(
-                "<div>hi</div>",
-            )
             chat = chat_ui(
                 risk_factors_element,
                 cost_drivers_element,
+                markdown,
+                barplot1,
+                barplot2,
+                unforseen_costs_html,
             )
 
 demo.queue()
