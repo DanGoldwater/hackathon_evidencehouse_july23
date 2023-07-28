@@ -79,6 +79,7 @@ The format of the json objects should be:
     }},
 ]
 ensure the answer is a valid JSON object parsable using JSON.parse(answer) return nothing else
+
                 """
                 ),
             },
@@ -103,8 +104,10 @@ ensure the answer is a valid JSON object parsable using JSON.parse(answer) retur
                 description=risk_factor["description"],
                 risk_probability=risk_factor.get("likelihood", None),
                 impact=risk_factor.get("impact", ""),
+
             )
-        )
+        except:
+            pass
 
     return risk_data
 

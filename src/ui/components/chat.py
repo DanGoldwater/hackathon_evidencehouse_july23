@@ -42,21 +42,26 @@ def chat_ui(
         ] + chat_messages
         # First message
         if len(chat_messages) == 1:
-            # sub_df = vector_store.query_vector_store(
-            #     df=vector_store.DF,
-            #     path=vector_store.FAISS_OPAI_PATH,
-            #     query_text=history[-1][0],
-            # )
-            # sub_df = embellish.embellish_dataframe(df=sub_df)
-            # text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
+            
+            sub_df = vector_store.query_vector_store(
+                df=vector_store.DF,
+                path=vector_store.FAISS_OPAI_PATH,
+                query_text=message
+            )
+            
+            sub_df = embellish.embellish_dataframe(df=sub_df)
+            
+            text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
+
+            # TODO - need to fix refresh so charts update
+            costs_barchart_ui(sub_df)
 
             chat_messages.append(
                 {
                     "role": "user",
                     "content": load_intial_prompt(
                         history[-1][0],
-                        ""
-                        # text_from_sub_df,
+                    sub_df_context= text_from_sub_df
                     ),
                 }
             )

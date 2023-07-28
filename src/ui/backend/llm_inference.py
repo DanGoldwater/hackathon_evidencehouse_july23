@@ -47,7 +47,7 @@ Risks:
 
 Summary:
 ...
-    """
+"""
     )
     return prompt
 
