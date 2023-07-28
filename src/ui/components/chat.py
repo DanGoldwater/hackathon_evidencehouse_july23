@@ -11,6 +11,7 @@ from src.ui.backend.llm_inference import (
 )
 from src.ui.components.risk_factors_tab import get_risk_factor_html
 from src.ui.components.cost_drivers_tab import get_cost_driver_html
+from src.ui.components.graphs_tab import costs_barchart_ui, graphs_tab_ui
 from src.vector_store import vector_store
 
 TOP_K_SIMILAR_CONTRACTS = 5
@@ -49,6 +50,9 @@ def chat_ui(
             sub_df = embellish.embellish_dataframe(df=sub_df)
             
             text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
+
+            # TODO - need to fix refresh so charts update
+            costs_barchart_ui(sub_df)
 
             chat_messages.append(
                 {"role": "user", "content": load_intial_prompt(
