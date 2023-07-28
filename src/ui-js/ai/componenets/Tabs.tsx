@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { CostDriver, RiskFactor, SummaryStats } from "@/app/page";
 import { BoxPlot } from "./BoxPlot";
+import BarChart from "./BarChart";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -61,7 +62,7 @@ export default function BasicTabs(props: Tabs) {
           aria-label="basic tabs example"
           className="text-white"
         >
-          <Tab label={"Statistics"} sx={{ color: "white" }} {...a11yProps(0)} />
+          <Tab label={"Overview"} sx={{ color: "white" }} {...a11yProps(0)} />
           <Tab
             label={"Costs Drivers"}
             sx={{ color: "white" }}
@@ -76,24 +77,44 @@ export default function BasicTabs(props: Tabs) {
       </Box>
       <CustomTabPanel value={value} index={0}>
         <div className="flex flex-col">
-          <h1 className='text-large'>Overview</h1>
-          <p> 
-          {props.summary.overview}
-          </p>
-            
-        <BoxPlot
-          label={"Costs"}
-          data={[
-            {
-              min: props.summary.minCost,
-              q1: props.summary.minCost,
-              median: props.summary.expectedCost,
-              q3: props.summary.maxCost,
-              max: props.summary.maxCost,
-            },
-          ]}
-        />
-        {/* TODO add summary stats here */}
+          {props.summary.overview === undefined ? (
+            <div className="flex flex-col">
+              <div style={{ fontSize: "20px" }}>
+                <b>
+                  <p>Please Enter A project</p>
+                </b>
+                <br />
+              </div>
+            </div>
+          ) : (
+            <div>
+              <h1 className="text-large">Overview</h1>
+              <p>{props.summary.overview}</p>
+              <hr />
+              <BoxPlot
+                label={"Costs"}
+                data={[
+                  { min: 100, q1: 200, median: 300, q3: 400, max: 500 },
+                  { min: 200, q1: 300, median: 400, q3: 500, max: 600 },
+                ]}
+              />
+
+              <h1>Time Frame</h1>
+              {/* <BarChart
+                labels={
+                  props.summary.similairProjects.map(
+                    (project) => project.name
+                  ) || []
+                }
+                data={
+                  props.summary.similairProjects.map(
+                    (project) => project.timeframe
+                  ) || []
+                }
+              /> */}
+            </div>
+          )}
+          {/* TODO add summary stats here */}
         </div>
       </CustomTabPanel>
       <CustomTabPanel value={value} index={1}>
@@ -125,6 +146,10 @@ export default function BasicTabs(props: Tabs) {
             <br />
           </div>
         ))}
+        <BarChart
+          data={props.costDrivers.map((costDriver) => costDriver.maxCost) || []}
+          labels={props.costDrivers.map((costDriver) => costDriver.title) || []}
+        />
       </CustomTabPanel>
       <CustomTabPanel value={value} index={2}>
         {props.riskFactors.map((riskFactor) => (

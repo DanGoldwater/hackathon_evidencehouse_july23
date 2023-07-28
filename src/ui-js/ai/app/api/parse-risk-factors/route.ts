@@ -21,8 +21,8 @@ The format of the json objects should be:
 [
     {{
         "title": "title of risk factor",
-        "minCost": "min cost of risk factor (float)",
-        "maxCost": "max cost of risk factor (float)",
+        "minCost": "min cost of risk factor (int)",
+        "maxCost": "max cost of risk factor (int)",
         "description": "description of risk factor",
         "likelihood": "probability of risk factor (string)",
         "impact": "impact of risk factor (string)"

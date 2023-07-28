@@ -21,8 +21,8 @@ The format of the json objects should be:
 [
     {{
         "title": "title of cost driver",
-        "minCost": "min cost of cost driver (float)",
-        "maxCost": "max cost of cost driver (float)",
+        "minCost": "min cost of cost driver (int)",
+        "maxCost": "max cost of cost driver (int)",
         "description": "description of cost driver"
     }},
 ]

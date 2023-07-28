@@ -27,6 +27,12 @@ export interface SummaryStats {
   expectedCost: number;
   timeframe: number;
   impact: string;
+  similairProjects: {
+    name: string;
+    expectedCost: number;
+    actualCost: number;
+    timeframe: number;
+  }[];
 }
 
 export default function Chat() {
@@ -37,67 +43,67 @@ export default function Chat() {
   async function onStreamComplete(outputMessage: Message) {
     // Get cost drivers
     if (costDrivers.length === 0 && riskFactors.length === 0) {
-      const costDrivers = await fetch("/api/parse-cost-drivers", {
-        method: "POST",
-        body: JSON.stringify({
-          messageContents: outputMessage.content,
-        }),
-      }).then(async (res) => {
-        const reader = res.body?.getReader();
-        const decoder = new TextDecoder("utf-8");
-        let result = "";
-        if (reader === undefined) {
-          return;
-        }
-        // Read the stream
-        while (true) {
-          const { done, value } = await reader.read();
+    //   const costDrivers = await fetch("/api/parse-cost-drivers", {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       messageContents: outputMessage.content,
+    //     }),
+    //   }).then(async (res) => {
+    //     const reader = res.body?.getReader();
+    //     const decoder = new TextDecoder("utf-8");
+    //     let result = "";
+    //     if (reader === undefined) {
+    //       return;
+    //     }
+    //     // Read the stream
+    //     while (true) {
+    //       const { done, value } = await reader.read();
 
-          if (done) {
-            console.log(result);
-            // The stream was fully read
-            return JSON.parse(result) as CostDriver[];
-          }
+    //       if (done) {
+    //         console.log(result);
+    //         // The stream was fully read
+    //         return JSON.parse(result) as CostDriver[];
+    //       }
 
-          // Decode the chunk and append it to the result
-          result += decoder.decode(value);
-        }
-      });
+    //       // Decode the chunk and append it to the result
+    //       result += decoder.decode(value);
+    //     }
+    //   });
 
-      if (costDrivers !== undefined) {
-        setCostDrivers(costDrivers);
-      }
-      // Get risk factors
-      const riskFactors = await fetch("/api/parse-risk-factors", {
-        method: "POST",
-        body: JSON.stringify({
-          messageContents: outputMessage.content,
-        }),
-      }).then(async (res) => {
-        const reader = res.body?.getReader();
-        const decoder = new TextDecoder("utf-8");
-        let result = "";
-        if (reader === undefined) {
-          return;
-        }
-        // Read the stream
-        while (true) {
-          const { done, value } = await reader.read();
+    //   if (costDrivers !== undefined) {
+    //     setCostDrivers(costDrivers);
+    //   }
+    //   // Get risk factors
+    //   const riskFactors = await fetch("/api/parse-risk-factors", {
+    //     method: "POST",
+    //     body: JSON.stringify({
+    //       messageContents: outputMessage.content,
+    //     }),
+    //   }).then(async (res) => {
+    //     const reader = res.body?.getReader();
+    //     const decoder = new TextDecoder("utf-8");
+    //     let result = "";
+    //     if (reader === undefined) {
+    //       return;
+    //     }
+    //     // Read the stream
+    //     while (true) {
+    //       const { done, value } = await reader.read();
 
-          if (done) {
-            // The stream was fully read
-            console.log(result);
-            return JSON.parse(result) as RiskFactor[];
-          }
+    //       if (done) {
+    //         // The stream was fully read
+    //         console.log(result);
+    //         return JSON.parse(result) as RiskFactor[];
+    //       }
 
-          // Decode the chunk and append it to the result
-          result += decoder.decode(value);
-        }
-      });
+    //       // Decode the chunk and append it to the result
+    //       result += decoder.decode(value);
+    //     }
+    //   });
 
-      if (riskFactors !== undefined) {
-        setRiskFactors(riskFactors);
-      }
+    //   if (riskFactors !== undefined) {
+    //     setRiskFactors(riskFactors);
+    //   }
 
       // Get summary
       const summary = await fetch("/api/parse-summary", {
@@ -127,6 +133,7 @@ export default function Chat() {
         }
       });
 
+      console.log(summary);
       if (summary !== undefined) {
         setSummary(summary);
       }
@@ -152,6 +159,7 @@ export default function Chat() {
           summary={summary}
         />
       </div>
+      
       {/* Have second column here */}
       <div className="w-full  py-24 mx-auto bg-grey shadow-md rounded-lg flex flex-col">
         {" "}

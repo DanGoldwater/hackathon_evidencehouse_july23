@@ -19,12 +19,22 @@ Your job is to generate a summary for the following project: {outputMessage}.
 Your summary should be formatted as follows:
 {{
   "overview": "overview of project",
-  "maxCost": "max cost predicted cost of project (float)",
-  "minCost": "min cost predicted cost of project (float)",
-  "expectedCost": "expected cost predicted cost of project (float)",
-  "timeframe": "timeframe of project (months)",
-  "impact": "impact of project (string)",
+  "maxCost": "max cost predicted cost of project (int) eg: 100000",
+  "minCost": "min cost predicted cost of project (int) eg: 100000",
+  "expectedCost": "expected cost predicted cost of project (int) eg: 100000",
+  "timeframe": "timeframe of project (months) (int) eg: 12",
+  "impact": "impact of project (string) eg: high",
+  "similairProjects": [
+    {
+      "name": "name of project (string) eg: project 1",
+      "expectedCost": "estimated cost (int) eg: 100000",
+      "actualCost": "actual cost (int) eg: 100000",
+      "timeframe": "timeframe of project months (int) eg: 12",
+    }
+    ]
 }}
+Return at least 5 similair projects (you can create examples if required)
+DO NOT INCLUDE COMMAS WHEN RETURNING INTEGERS THIS WILL BREAK THE PARSER
 ensure the answer is a valid JSON object parsable using JSON.parse(answer) return nothing else
 `;
 
@@ -38,7 +48,7 @@ export async function POST(req: Request) {
       content: initialPrompt.replace("{outputMessage}", messageContents),
     } as ChatCompletionRequestMessage,
   ];
-  console.log(messages)
+  console.log(messages);
   // Ask OpenAI for a streaming chat completion given the prompt
   const response = await openai.createChatCompletion({
     model: "gpt-3.5-turbo-0613",
