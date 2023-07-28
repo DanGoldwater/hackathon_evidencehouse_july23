@@ -50,7 +50,10 @@ def chat_ui(
             sub_df = embellish.embellish_dataframe(df=sub_df)
             
             text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
+
+            # TODO - need to fix refresh so charts update
             costs_barchart_ui(sub_df)
+
             chat_messages.append(
                 {"role": "user", "content": load_intial_prompt(
                     input_description= message, 
