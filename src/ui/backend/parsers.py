@@ -15,17 +15,18 @@ def parse_cost_drivers_data(output_message: str) -> list[CostDriver]:
                 "role": "user",
                 "content": textwrap.dedent(
                     f"""
-                Your job is to extract the cost drivers from this message as a list of json objects: {output_message}.
-                The format of the json objects should be:
-                [
-                    {{
-                        "title": "title of cost driver",
-                        "min_cost": "min cost of cost driver (float)",
-                        "max_cost": "max cost of cost driver (float)",
-                        "description": "description of cost driver"
-                    }},
-                ]
-                ensure the answer is parsable using json.loads(answer) return nothing else
+Your job is to extract the cost drivers from the following message as a list of json objects: {output_message}.
+you should give specfic estimated numbers for the min and max cost of each cost driver.
+The format of the json objects should be:
+[
+    {{
+        "title": "title of cost driver",
+        "min_cost": "min cost of cost driver (int)",
+        "max_cost": "max cost of cost driver (int)",
+        "description": "description of cost driver"
+    }},
+]
+ensure the answer is a valid JSON object parsable using JSON.parse(answer) return nothing else
                 """
                 ),
             },
@@ -64,18 +65,20 @@ def parse_risk_factors_data(output_message: str):
                 "role": "user",
                 "content": textwrap.dedent(
                     f"""
-                Your job is to extract the risk factors from this message as a list of json objects: {output_message}.
-                The format of the json objects should be:
-                [
-                    {{
-                        "title": "title of risk factor",
-                        "min_cost": "min cost of risk factor (float)",
-                        "max_cost": "max cost of risk factor (float)",
-                        "description": "description of risk factor",
-                        "probability": "probability of risk factor"
-                    }},
-                ]
-                ensure the answer is parsable using json.loads(answer) return nothing else
+Your job is to extract all of the risk factors from the following message as a list of json objects: {output_message}.
+You should give specfic numbers for the min and max cost of each risk factor.
+The format of the json objects should be:
+[
+    {{
+        "title": "title of risk factor",
+        "min_cost": "min cost of risk factor (int)",
+        "max_cost": "max cost of risk factor (int)",
+        "description": "description of risk factor",
+        "likelihood": "probability of risk factor (string)",
+        "impact": "impact of risk factor (string)"
+    }},
+]
+ensure the answer is a valid JSON object parsable using JSON.parse(answer) return nothing else
                 """
                 ),
             },
@@ -98,7 +101,8 @@ def parse_risk_factors_data(output_message: str):
                 min_cost=risk_factor["min_cost"],
                 max_cost=risk_factor["max_cost"],
                 description=risk_factor["description"],
-                risk_probability=risk_factor.get("probability", None),
+                risk_probability=risk_factor.get("likelihood", None),
+                impact=risk_factor.get("impact", ""),
             )
         )
 

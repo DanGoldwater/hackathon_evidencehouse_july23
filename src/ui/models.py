@@ -8,6 +8,7 @@ class RiskFactor(BaseModel):
     risk_probability: Optional[str]
     min_cost: Optional[float]
     max_cost: Optional[float]
+    impact: str
 
 
 class CostDriver(BaseModel):

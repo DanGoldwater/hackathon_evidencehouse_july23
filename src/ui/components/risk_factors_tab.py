@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from src.ui.models import RiskFactor
 
 
-def get_risk_factor_html(risk_factor: RiskFactor):
+def get_risk_factor_html_single(risk_factor: RiskFactor):
     if risk_factor.min_cost is None or risk_factor.max_cost is None:
         return f"""
         <div style='font-size:20px'>
@@ -36,15 +36,18 @@ def get_risk_factor_html(risk_factor: RiskFactor):
         """
 
 
+def get_risk_factor_html_total(risk_factor: list[RiskFactor]):
+    return_html = ""
+    for factor in risk_factor:
+        return_html += get_risk_factor_html_single(factor)
+    return return_html
+
+
 def risk_factors_tab_ui(risk_factors: list[RiskFactor]):
     with gr.Column():
-        return_elements = []
-        for factor in risk_factors:
-            rendered_el = gr.HTML(
-                get_risk_factor_html(factor),
-                interactive=True,
-            )
-            rendered_el = rendered_el.update(value="<div></div>")
-            return_elements.append(rendered_el)
-
-        return return_elements
+        # for factor in risk_factors:
+        rendered_el = gr.HTML(
+            get_risk_factor_html_total(risk_factors),
+            interactive=True,
+        )
+        return rendered_el

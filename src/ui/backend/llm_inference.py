@@ -15,24 +15,38 @@ def load_system_prompt() -> str:
     return "You are a data analyst in charge of assisting the UK government with procurement of contracts"
 
 
-def load_intial_prompt(input_description: str, query_fragments: str) -> str:
+def load_intial_prompt(input_description: str, previous_jobs: str) -> str:
     prompt = textwrap.dedent(
         f"""
-    The UK government is doing a procurement of {input_description}. 
-    Please give me a list of bullet points with key drivers of costs and key risks with this type of procurement
+The UK government is doing a procurement of {input_description}. 
+Please give me a list of bullet points with key drivers of costs and key risks with this type of procurement
+You should be extremely specific and detailed in your answers.
 
-    Here is some example data to help inform your answer:
-    {query_fragments}
+Some related, previous project descriptions are:
+{previous_jobs}
 
-    Return your answer in the format:
-    Cost Drivers (Title, MinCost (GBP), MaxCost (GBP), Description):
-    ...
+Return your answer in the format:
+You must return estimated values for each cost driver and risk factor.
+Overview:
+...
 
-    Risks (Title, Description, MinCost (GBP), MaxCost (GBP), Likelihood (eg: Moderate), Impact (eg: High)):
-    ...
+Cost Drivers:
+- Title: {{title}}
+  Description: {{description}}
+  MinCost (GBP): {{minCost}}
+  MaxCost (GBP): {{maxCost}}
 
-    Summary:
-    ...
+Risks:
+- Title: {{title}}
+  Description: {{description}}
+  Likelihood: {{likelihood}}
+  Impact: {{impact}}
+  MinCost (GBP): {{minCost}}
+  MaxCost (GBP): {{maxCost}}
+...
+
+Summary:
+...
     """
     )
     return prompt
