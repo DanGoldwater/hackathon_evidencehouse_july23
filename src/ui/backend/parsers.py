@@ -75,7 +75,8 @@ def parse_risk_factors_data(output_message: str):
                         "probability": "probability of risk factor"
                     }},
                 ]
-                ensure the answer is parsable using json.loads(answer) return nothing else
+                ensure the answer is parsable using json.loads(answer).
+                Make sure to return nothing else.
                 """
                 ),
             },
@@ -88,19 +89,22 @@ def parse_risk_factors_data(output_message: str):
     output = json.loads(output)
     risk_data = []
     for i, risk_factor in enumerate(output):
-        if type(risk_factor.get("min_cost", "")) is str:
-            risk_factor["min_cost"] = None
-        if type(risk_factor.get("max_cost", "")) is str:
-            risk_factor["max_cost"] = None
-        risk_data.append(
-            RiskFactor(
-                title=risk_factor["title"],
-                min_cost=risk_factor["min_cost"],
-                max_cost=risk_factor["max_cost"],
-                description=risk_factor["description"],
-                risk_probability=risk_factor.get("probability", None),
+        try:
+            if type(risk_factor.get("min_cost", "")) is str:
+                risk_factor["min_cost"] = None
+            if type(risk_factor.get("max_cost", "")) is str:
+                risk_factor["max_cost"] = None
+            risk_data.append(
+                RiskFactor(
+                    title=risk_factor["Title"],
+                    min_cost=risk_factor["min_cost"],
+                    max_cost=risk_factor["max_cost"],
+                    description=risk_factor["Description"],
+                    risk_probability=risk_factor.get("probability", None),
+                )
             )
-        )
+        except:
+            pass
 
     return risk_data
 

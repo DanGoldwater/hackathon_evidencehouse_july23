@@ -46,7 +46,7 @@ def chat_ui(
             #     top_k=TOP_K_SIMILAR_CONTRACTS
             #     )
             
-            # sub_df = embellish.embellish_dataframe(df=sub_df)
+            sub_df = embellish.embellish_dataframe(df=sub_df)
             
             text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
 
@@ -71,9 +71,17 @@ def chat_ui(
             risk_factors_data = parse_risk_factors_data(response)
             cost_drivers_data = parse_cost_drivers_data(response)
 
-            for i in range(len(risk_factors)):
-                risk_factors[i].update(get_risk_factor_html(risk_factors_data[i]))
-                cost_drivers[i].update(get_cost_driver_html(cost_drivers_data[i]))
+            if len(risk_factors) > 0:
+                for i in range(len(risk_factors_data )):
+                    html_output = get_risk_factor_html(risk_factors_data[i])
+                    print(f"HTML output: {html_output}")
+                    risk_factors[i].update(html_output)
+                    if len(cost_drivers_data) >= i:
+                        cost_drivers[i].update(get_cost_driver_html(cost_drivers_data[i]))
+
+            # for i in range(len(risk_factors)):
+            #     risk_factors[i].update(get_risk_factor_html(risk_factors_data[i]))
+            #     cost_drivers[i].update(get_cost_driver_html(cost_drivers_data[i]))
 
     return gr.ChatInterface(
         predict,
