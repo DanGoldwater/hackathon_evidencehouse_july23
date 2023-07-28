@@ -26,11 +26,11 @@ def costs_barchart_ui(df=DUMMY_DATA):
     gr.BarPlot(stacked_df, x="Name", y="value", color="variable", title="Costs split by type")
 
     # Unforseen costs
-    gr.HTML("<b>Unforseen costs</b>")
-    with gr.Column():
-        unforseen_costs = df["unforseen_costs"].values.tolist()
-        for description in unforseen_costs:
-            gr.HTML(f"<li>{description}</li>")
+    # gr.HTML("<b>Unforseen costs</b>")
+    # with gr.Column():
+    #     unforseen_costs = df["unforseen_costs"].values.tolist()
+    #     for description in unforseen_costs:
+    #         gr.HTML(f"<li>{description}</li>")
 
 
 def graphs_tab_ui():
