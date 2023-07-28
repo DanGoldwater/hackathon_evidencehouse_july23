@@ -91,14 +91,16 @@ def get_text_from_row(row):
     text = str(title) + " " + description + " " + str(additional_text)
     return text
 
+
 def get_strucutred_text_from_small_df(df):
-    string_out = ''
+    string_out = ""
     for i, row in df.iterrows():
         title = 'Title: ' + str(row['Title'])
         description = 'Description: ' + str(row['Description'])
         additional_text = 'Additional Text: ' + str(row['Additional Text'])
     string_out = string_out + title + description + additional_text + '\n\n'
     return string_out
+
 
 def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), top_k=5):
     model = SentenceTransformer("all-mpnet-base-v2")
@@ -119,6 +121,7 @@ def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), t
 
 
 def main():
+
     # make_local_faiss_db(df=df.sample(n=30))
     # get_embeddings_and_index(df=DF, path=FAISS_OPAI_PATH)
     print('querying')

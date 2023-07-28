@@ -24,7 +24,7 @@ with gr.Blocks(
             with gr.Tab("Graphs"):
                 graphs = graphs_tab_ui()
             with gr.Tab("Risk Factors"):
-                risk_factors_elements = risk_factors_tab_ui(
+                risk_factors_element = risk_factors_tab_ui(
                     [
                         RiskFactor(
                             title="Foreign Goods Tax Increase",
@@ -32,6 +32,7 @@ with gr.Blocks(
                             risk_probability="moderate",
                             min_cost=10_000_000,
                             max_cost=20_000_000,
+                            impact="high",
                         ),
                         RiskFactor(
                             title="Rare Earth Elements",
@@ -39,6 +40,7 @@ with gr.Blocks(
                             risk_probability="low",
                             min_cost=10_000_000,
                             max_cost=20_000_000,
+                            impact="high",
                         ),
                         RiskFactor(
                             title="Disruption of Supply Chain",
@@ -46,12 +48,13 @@ with gr.Blocks(
                             risk_probability="low",
                             min_cost=10_000_000,
                             max_cost=20_000_000,
+                            impact="high",
                         ),
                     ]
                 )
 
             with gr.Tab("Cost Drivers"):
-                cost_drivers_elements = cost_drivers_tab_ui(
+                cost_drivers_element = cost_drivers_tab_ui(
                     [
                         CostDriver(
                             title="Skilled Labour",
@@ -103,9 +106,12 @@ with gr.Blocks(
                 )
 
         with gr.Column(scale=2, min_width=600):
+            test = gr.HTML(
+                "<div>hi</div>",
+            )
             chat = chat_ui(
-                risk_factors_elements,
-                cost_drivers_elements,
+                risk_factors_element,
+                cost_drivers_element,
             )
 
 demo.queue()

@@ -1,6 +1,13 @@
 import time
 import random
+import openai
 import gradio as gr
+from src.ui.components.cost_drivers_tab import (
+    get_cost_driver_html_single,
+)
+from src.ui.components.risk_factors_tab import (
+    get_risk_factor_html_total,
+)
 from src.embellish import embellish
 from src.ui.backend.parsers import parse_risk_factors_data, parse_cost_drivers_data
 from src.ui.backend.consts import MODEL_TYPE
@@ -9,30 +16,31 @@ from src.ui.backend.llm_inference import (
     load_system_prompt,
     load_intial_prompt,
 )
-from src.ui.components.risk_factors_tab import get_risk_factor_html
-from src.ui.components.cost_drivers_tab import get_cost_driver_html
-from src.ui.components.graphs_tab import costs_barchart_ui, graphs_tab_ui
+from src.ui.components.risk_factors_tab import get_risk_factor_html_total
+from src.ui.components.cost_drivers_tab import get_cost_driver_html_total
 from src.vector_store import vector_store
 
 TOP_K_SIMILAR_CONTRACTS = 5
 
 
 def chat_ui(
-    risk_factors: list[gr.Blocks],
-    cost_drivers: list[gr.Blocks],
+    risk_factors: gr.Blocks,
+    cost_drivers: gr.Blocks,
 ):
-    def predict(message, history):
-        chat_messages = []
+    chatbot = gr.Chatbot()
+    msg = gr.Textbox()
+    clear = gr.Button("Clear")
 
-        for human, assistant in history:
-            chat_messages.append({"role": "user", "content": human})
-            chat_messages.append({"role": "assistant", "content": assistant})
+    def user(user_message, history):
+        return "", history + [[user_message, None]]
+
+    def bot(history):
+        chat_messages = []
 
         chat_messages = [
             {"role": "system", "content": load_system_prompt()}
         ] + chat_messages
-
-        # If its the first message use the initial prompt (and vector db query)
+        # First message
         if len(chat_messages) == 1:
             
             sub_df = vector_store.query_vector_store(
@@ -40,12 +48,6 @@ def chat_ui(
                 path=vector_store.FAISS_OPAI_PATH,
                 query_text=message
             )
-            
-            # sub_df = vector_store.get_nearest_rows_from_df(
-            #     query=message,
-            #     df=vector_store.get_main_df(),
-            #     top_k=TOP_K_SIMILAR_CONTRACTS
-            #     )
             
             sub_df = embellish.embellish_dataframe(df=sub_df)
             
@@ -55,38 +57,48 @@ def chat_ui(
             costs_barchart_ui(sub_df)
 
             chat_messages.append(
-                {"role": "user", "content": load_intial_prompt(
-                    input_description= message, 
+                {
+                    "role": "user",
+                    "content": load_intial_prompt(
+                        history[-1][0],
                     sub_df_context= text_from_sub_df
-                    )}
+                    ),
+                }
             )
         else:
-            chat_messages.append({"role": "user", "content": message})
+            chat_messages.append({"role": "user", "content": history[-1][0]})
 
-        stream = create_chat_completion(messages=chat_messages)
+        for human, assistant in history:
+            if human is not None:
+                chat_messages.append({"role": "user", "content": human})
+            if assistant is not None:
+                chat_messages.append({"role": "assistant", "content": assistant})
 
-        response = ""
-        for chunk in stream:
-            response += chunk
-            yield response
+        response = create_chat_completion(messages=chat_messages)
+        history[-1][1] = ""
+        for character in response:
+            print(character)
+            history[-1][1] += character
+            yield history
 
-        # If its the first call then parse and render the risk factors and cost drivers
-        if len(chat_messages) == 2:
-            risk_factors_data = parse_risk_factors_data(response)
-            cost_drivers_data = parse_cost_drivers_data(response)
+    def update_charts(history, risk_factors, cost_drivers):
+        if len(history) == 1:
+            risk_factors_data = get_risk_factor_html_total(
+                parse_risk_factors_data(history[-1][1])
+            )
+            print("Risk factor data", risk_factors_data)
+            cost_drivers_data = get_cost_driver_html_total(
+                parse_cost_drivers_data(history[-1][1])
+            )
+            return risk_factors_data, cost_drivers_data
+        else:
+            return risk_factors, cost_drivers
 
-            if len(risk_factors) > 0:
-                for i in range(len(risk_factors_data )):
-                    html_output = get_risk_factor_html(risk_factors_data[i])
-                    print(f"HTML output: {html_output}")
-                    risk_factors[i].update(html_output)
-                    if len(cost_drivers_data) >= i:
-                        cost_drivers[i].update(get_cost_driver_html(cost_drivers_data[i]))
-
-            # for i in range(len(risk_factors)):
-            #     risk_factors[i].update(get_risk_factor_html(risk_factors_data[i]))
-            #     cost_drivers[i].update(get_cost_driver_html(cost_drivers_data[i]))
-
-    return gr.ChatInterface(
-        predict,
+    msg.submit(user, [msg, chatbot], [msg, chatbot], queue=False).then(
+        bot, chatbot, chatbot
+    ).then(
+        update_charts,
+        [chatbot, risk_factors, cost_drivers],
+        [risk_factors, cost_drivers],
     )
+    clear.click(lambda: None, None, chatbot, queue=False)
