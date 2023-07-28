@@ -42,27 +42,18 @@ def chat_ui(
         ] + chat_messages
         # First message
         if len(chat_messages) == 1:
-            
             sub_df = vector_store.query_vector_store(
                 df=vector_store.DF,
                 path=vector_store.FAISS_OPAI_PATH,
-                query_text=message
+                query_text=history[-1][0],
             )
-            
             sub_df = embellish.embellish_dataframe(df=sub_df)
-            
             text_from_sub_df = vector_store.get_strucutred_text_from_small_df(df=sub_df)
-
-            # TODO - need to fix refresh so charts update
-            costs_barchart_ui(sub_df)
 
             chat_messages.append(
                 {
                     "role": "user",
-                    "content": load_intial_prompt(
-                        history[-1][0],
-                    sub_df_context= text_from_sub_df
-                    ),
+                    "content": load_intial_prompt(history[-1][0], text_from_sub_df),
                 }
             )
         else:
@@ -77,7 +68,6 @@ def chat_ui(
         response = create_chat_completion(messages=chat_messages)
         history[-1][1] = ""
         for character in response:
-            print(character)
             history[-1][1] += character
             yield history
 
@@ -86,7 +76,6 @@ def chat_ui(
             risk_factors_data = get_risk_factor_html_total(
                 parse_risk_factors_data(history[-1][1])
             )
-            print("Risk factor data", risk_factors_data)
             cost_drivers_data = get_cost_driver_html_total(
                 parse_cost_drivers_data(history[-1][1])
             )
