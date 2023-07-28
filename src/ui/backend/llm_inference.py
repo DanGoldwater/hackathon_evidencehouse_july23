@@ -15,11 +15,15 @@ def load_system_prompt() -> str:
     return "You are a data analyst in charge of assisting the UK government with procurement of contracts"
 
 
-def load_intial_prompt(input_description: str,) -> str:
+def load_intial_prompt(input_description: str, sub_df_context: str) -> str:
     prompt = textwrap.dedent(
         f"""
-    The UK government is doing a procurement of {input_description}. 
-    Please give me a list of bullet points with key drivers of costs and key risks with this type of procurement
+    The UK government is doing a procurement of {input_description}.
+    
+    Some related, previous project descriptions are:
+    {sub_df_context}
+    
+    Based on these projects, give me a list of bullet points with key drivers of costs and key risks with this type of procurement
     Return your answer in the format:
  
     Cost Drivers (Title, MinCost (GBP), MaxCost (GBP), Description):

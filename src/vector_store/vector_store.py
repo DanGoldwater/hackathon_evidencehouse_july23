@@ -45,6 +45,7 @@ def get_main_df():
         "src/data/Contract_Data.csv"
     )
 EmbeddingsOpenAi =  OpenAIEmbeddings(model='text-embedding-ada-002')
+DF = get_main_df()
 
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.schema.document import Document
@@ -93,9 +94,9 @@ def get_text_from_row(row):
 def get_strucutred_text_from_small_df(df):
     string_out = ''
     for i, row in df.iterrows():
-        title = 'Title: ' + row['Title']
-        description = 'Description: ' + row['Description']
-        additional_text = 'Additional Text: ' + row['Additional Text']
+        title = 'Title: ' + str(row['Title'])
+        description = 'Description: ' + str(row['Description'])
+        additional_text = 'Additional Text: ' + str(row['Additional Text'])
     string_out = string_out + title + description + additional_text + '\n\n'
     return string_out
 
@@ -118,11 +119,10 @@ def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), t
 
 
 def main():
-    df = get_main_df()
-    print(len(df))
     # make_local_faiss_db(df=df.sample(n=30))
-    # get_embeddings_and_index(df=df, path=FAISS_OPAI_PATH)
-    ddf = query_vector_store(df=df, 
+    # get_embeddings_and_index(df=DF, path=FAISS_OPAI_PATH)
+    print('querying')
+    ddf = query_vector_store(df=DF, 
                              path=FAISS_OPAI_PATH,
                              query_text='Our plan is to procure four hundred new street lamps for our count')
     for d in ddf['Description']:
