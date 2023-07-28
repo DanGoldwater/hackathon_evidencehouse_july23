@@ -28,17 +28,17 @@ def costs_barchart_ui(df):
     print("I expect a bar plot")
     gr.BarPlot(total_costs_df, x=id_col, y="Total Estimate", title="Estimated costs of similar projects", min_width=1200)
 
-        # Stacked 
-        stacked_df = df[categories_and_id]
-        stacked_df = stacked_df.melt(id_vars=id_col, value_vars=categories)
-        gr.BarPlot(stacked_df, x=id_col, y="value", color="variable", title="Estimated costs split by type")
+    # Stacked 
+    stacked_df = df[categories_and_id]
+    stacked_df = stacked_df.melt(id_vars=id_col, value_vars=categories)
+    gr.BarPlot(stacked_df, x=id_col, y="value", color="variable", title="Estimated costs split by type")
 
     # Unforseen costs
-    # gr.HTML("<b>Unforseen costs</b>")
-    # with gr.Column():
-    #     unforseen_costs = df["unforseen_costs"].values.tolist()
-    #     for description in unforseen_costs:
-    #         gr.HTML(f"<li>{description}</li>")
+    gr.HTML("<b>Unforseen costs</b>")
+    with gr.Column():
+        unforseen_costs = df["unforseen_costs"].values.tolist()
+        for description in unforseen_costs:
+            gr.HTML(f"<li>{description}</li>")
 
 
 def graphs_tab_ui(df=dummy_data):
