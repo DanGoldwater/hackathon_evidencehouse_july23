@@ -52,7 +52,7 @@ from langchain.schema.document import Document
 from langchain.vectorstores import FAISS
 
 def get_embeddings_and_index(df, path):
-    df = df.sample(n=10)
+    # df = df.sample(n=10)
     
 
     # Store the DataFrame index in the Document metadata
@@ -123,7 +123,7 @@ def get_nearest_rows_from_df(query: str, df: pandas.DataFrame = get_main_df(), t
 def main():
 
     # make_local_faiss_db(df=df.sample(n=30))
-    # get_embeddings_and_index(df=DF, path=FAISS_OPAI_PATH)
+    get_embeddings_and_index(df=DF, path=FAISS_OPAI_PATH)
     print('querying')
     ddf = query_vector_store(df=DF, 
                              path=FAISS_OPAI_PATH,
