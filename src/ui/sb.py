@@ -1,7 +1,6 @@
-from backend.llm_inference import (
-    create_chat_completion,
-)
 import textwrap
+
+from backend.llm_inference import create_chat_completion
 
 output_message = """
 Cost Drivers:

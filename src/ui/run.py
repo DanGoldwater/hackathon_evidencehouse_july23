@@ -1,14 +1,15 @@
-import gradio as gr
 import random
-import pandas as pd
 import time
 
+import gradio as gr
+import pandas as pd
+
 from .components.chat import chat_ui
-from .models import RiskFactor, CostDriver
-from .components.graphs_tab import graphs_tab_ui
-from .components.summary_tab import summary_tab_ui
 from .components.cost_drivers_tab import cost_drivers_tab_ui
+from .components.graphs_tab import graphs_tab_ui
 from .components.risk_factors_tab import risk_factors_tab_ui
+from .components.summary_tab import summary_tab_ui
+from .models import CostDriver, RiskFactor
 
 with gr.Blocks(
     css="""

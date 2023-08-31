@@ -1,9 +1,11 @@
 import os
-import openai
 import textwrap
-from .consts import MODEL_TYPE
-from dotenv import load_dotenv
 from typing import Generator, Union
+
+import openai
+from dotenv import load_dotenv
+
+from .consts import MODEL_TYPE
 
 load_dotenv()
 

@@ -1,11 +1,11 @@
 import os
-import pandas
-from sentence_transformers import SentenceTransformer
-from transformers import DistilBertTokenizer, DistilBertModel
+
 import faiss
 import numpy as np
+import pandas
 from dotenv import load_dotenv
-
+from sentence_transformers import SentenceTransformer
+from transformers import DistilBertModel, DistilBertTokenizer
 
 FAISS_PATH = "faiss_index.pkl"
 FAISS_PATH2 = "faiss_index2.pkl"
@@ -15,19 +15,19 @@ load_dotenv()
 key = os.getenv("OPENAI_API_KEY")
 
 
+import pickle
+
 # tokenizer = DistilBertTokenizer.from_pretrained("distilbert-base-uncased")
 # model = DistilBertModel.from_pretrained("distilbert-base-uncased")
 # from langchain.document_loaders import 
 import faiss
 import numpy as np
-import pickle
+from langchain.document_loaders import TextLoader
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.vectorstores import FAISS
-from langchain.document_loaders import TextLoader
 from sentence_transformers import SentenceTransformer
-
 
 # def get_embeddings_for_documnts(docs, path):
 #     from langchain.embeddings import OpenAIEmbeddings
@@ -50,6 +50,7 @@ DF = get_main_df()
 from langchain.embeddings import OpenAIEmbeddings
 from langchain.schema.document import Document
 from langchain.vectorstores import FAISS
+
 
 def get_embeddings_and_index(df, path):
     # df = df.sample(n=10)

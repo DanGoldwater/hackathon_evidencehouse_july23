@@ -1,9 +1,10 @@
+import os
+
 import pandas as pd
+from dotenv import load_dotenv
 
 # from anthropic import Genesis
 from ..vector_store import vector_store
-from dotenv import load_dotenv
-import os
 
 load_dotenv()
 
@@ -11,8 +12,7 @@ API_KEY = os.environ["ANTHROPIC_API_KEY"]
 
 
 import pandas as pd
-
-from anthropic import Anthropic, HUMAN_PROMPT, AI_PROMPT
+from anthropic import AI_PROMPT, HUMAN_PROMPT, Anthropic
 
 PRE_PROMPT = "I am about to pass you a description of a project. Based on this description, describe three possible unforseen costs of the project. You can embellish, but be realistic. Be concise; use around ten words per point. "
 

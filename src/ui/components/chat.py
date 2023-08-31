@@ -1,29 +1,23 @@
-import time
 import random
-import openai
-import gradio as gr
-from src.ui.components.graphs_tab import (
-    create_stacked_barchart_df,
-    get_unforseen_costs_html,
-)
-from src.ui.components.cost_drivers_tab import (
-    get_cost_driver_html_single,
-)
-from src.ui.components.risk_factors_tab import (
-    get_risk_factor_html_total,
-)
-from src.embellish import embellish
-from src.ui.backend.parsers import parse_risk_factors_data, parse_cost_drivers_data
-from src.ui.backend.consts import MODEL_TYPE
-from src.ui.backend.llm_inference import (
-    create_chat_completion,
-    load_system_prompt,
-    load_intial_prompt,
-)
-from src.ui.components.risk_factors_tab import get_risk_factor_html_total
-from src.ui.components.cost_drivers_tab import get_cost_driver_html_total
-from src.vector_store import vector_store
+import time
 from typing import Tuple
+
+import gradio as gr
+import openai
+
+from src.embellish import embellish
+from src.ui.backend.consts import MODEL_TYPE
+from src.ui.backend.llm_inference import (create_chat_completion,
+                                          load_intial_prompt,
+                                          load_system_prompt)
+from src.ui.backend.parsers import (parse_cost_drivers_data,
+                                    parse_risk_factors_data)
+from src.ui.components.cost_drivers_tab import (get_cost_driver_html_single,
+                                                get_cost_driver_html_total)
+from src.ui.components.graphs_tab import (create_stacked_barchart_df,
+                                          get_unforseen_costs_html)
+from src.ui.components.risk_factors_tab import get_risk_factor_html_total
+from src.vector_store import vector_store
 
 TOP_K_SIMILAR_CONTRACTS = 5
 

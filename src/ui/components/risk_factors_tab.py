@@ -1,5 +1,6 @@
 import gradio as gr
 from pydantic import BaseModel
+
 from src.ui.models import RiskFactor
 
 

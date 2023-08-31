@@ -1,5 +1,6 @@
 import json
 import textwrap
+
 from ..models import CostDriver, RiskFactor
 from .llm_inference import create_chat_completion
 
