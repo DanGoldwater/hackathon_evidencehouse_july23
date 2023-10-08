@@ -1,3 +1,9 @@
+---
+title: ChatGProcurementT
+app_file: main.py
+sdk: gradio
+sdk_version: 3.39.0
+---
 # Generative-AI-Powered Procurement Assistant
 ## This project aims to create an assistant that can optimize procurement processes by learning from past procurement data. 
 
